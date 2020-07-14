@@ -1,0 +1,17 @@
+---
+- name: Setup Workshop
+  hosts: local
+  vars:
+    kubeconfig: ""
+  tasks:
+    - import_role:
+        name: darthlukan.argocd_install.install_prereqs
+    - import_role:
+        name: darthlukan.argocd_install.install_argocd
+    - name: Deploy workshop ArgoCD cluster
+      k8s:
+        namespace: argocd
+        src: "{{ playbook_path }}/files/workshop-argo-cluster-cr.yaml"
+        state: present
+        kubeconfig: "{{ kubeconfig }}"
+...
