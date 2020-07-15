@@ -5,7 +5,7 @@ metadata:
   name: simple-app 
   namespace: argocd
 spec:
-  project: simple-app 
+  project: default 
   source:
     repoURL: https://github.com/darthlukan/gitops-workshop.git
     targetRevision: HEAD
