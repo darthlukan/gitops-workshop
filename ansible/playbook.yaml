@@ -15,14 +15,6 @@
       state: present
       kubeconfig: "{{ kubeconfig }}"
 
-  - name: integration-namespace is present
-    k8s:
-      name: integration-namespace
-      kind: Namespace
-      api_version: v1
-      state: present
-      kubeconfig: "{{ kubeconfig }}"
-
   - name: Deploy workshop applications
     k8s:
       namespace: argocd
