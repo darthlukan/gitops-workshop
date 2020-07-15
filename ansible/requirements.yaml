@@ -1,3 +1,4 @@
 ---
-- src: darthlukan.argocd_install
+collections:
+  - name: darthlukan.argocd_install
 ...
