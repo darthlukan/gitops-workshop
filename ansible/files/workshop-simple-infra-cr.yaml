@@ -16,4 +16,7 @@ spec:
     namespace: sample-infra 
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  syncPolicy:
+    automated:
+      selfHeal: true
 ...
