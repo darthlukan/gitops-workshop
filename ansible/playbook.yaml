@@ -14,4 +14,14 @@
       src: "{{ playbook_dir }}/files/workshop-argo-cluster-cr.yaml"
       state: present
       kubeconfig: "{{ kubeconfig }}"
+
+  - name: Deploy workshop applications
+    k8s:
+      namespace: argocd
+      src: "{{ playbook_dir }}/files/{{ item }}"
+      state: present
+      kubeconfig: "{{ kubeconfig }}"
+    loop:
+      - workshop-simple-app-cr.yaml
+      - workshop-simple-infra-cr.yaml
 ...
