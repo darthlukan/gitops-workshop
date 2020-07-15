@@ -1,0 +1,19 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: simple-app 
+  namespace: argocd
+spec:
+  project: simple-app 
+  source:
+    repoURL: https://github.com/darthlukan/gitops-workshop.git
+    targetRevision: HEAD
+    path: simple-app 
+  destination:
+    # Need to get this automagically via detection
+    server: https://kubernetes.default.svc
+    namespace: simple-app 
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+...
