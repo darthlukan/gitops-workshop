@@ -2,7 +2,7 @@
 - name: Setup Workshop
   hosts: local
   vars:
-    kubeconfig: ""
+    kubeconfig: "/home/{{ ansible_user_id }}/.minishift/machines/minishift_kubeconfig"
   tasks:
     - import_role:
         name: darthlukan.argocd_install.install_prereqs
@@ -11,7 +11,7 @@
     - name: Deploy workshop ArgoCD cluster
       k8s:
         namespace: argocd
-        src: "{{ playbook_path }}/files/workshop-argo-cluster-cr.yaml"
+        src: "{{ playbook_dir }}/files/workshop-argo-cluster-cr.yaml"
         state: present
         kubeconfig: "{{ kubeconfig }}"
 ...
