@@ -2,18 +2,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sample-app 
+  name: sample-infra 
   namespace: argocd
 spec:
-  project: default 
+  project: workshop
   source:
     repoURL: https://github.com/darthlukan/gitops-workshop.git
     targetRevision: HEAD
-    path: sample-app 
+    path: sample-infra 
   destination:
     # Need to get this automagically via detection
     server: https://kubernetes.default.svc
-    namespace: sample-app 
+    namespace: sample-infra 
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  syncPolicy:
+    automated:
+      selfHeal: true
 ...
