@@ -1,0 +1,20 @@
+---
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: app-repo
+spec:
+  type: git
+  params:
+  - name: url
+    value: https://gitlab.consulting.redhat.com/btomlins/gitops-workshop/sample-app
+---
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: app-image
+spec:
+  type: image
+  params:
+  - name: url
+    value: image-registry.openshift-image-registry.svc:5000/gitops-workshop/nodejs-rest-http:latest

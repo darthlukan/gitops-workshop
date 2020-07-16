@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: gitops-workshop-pipeline-run-
+  namespace: gitops-workshop
+spec:
+  serviceAccountName: build-bot
+  pipelineRef:
+    name: build-and-deploy
+  resources:
+    - name: git-repo
+      resourceRef:
+        name: app-repo
+    - name: image
+      resourceRef:
+        name: app-image
+  params:
+    - name: deployment-name
+      value: nodejs-rest-http
