@@ -22,6 +22,7 @@
       state: present
       kubeconfig: "{{ kubeconfig }}"
     loop:
+      - workshop-argo-project-cr.yaml
       - workshop-simple-app-cr.yaml
       - workshop-simple-infra-cr.yaml
 ...
