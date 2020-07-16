@@ -1,5 +1,6 @@
-[local]
-127.0.0.1
-
-[local:vars]
-ansible_connection = local
+---
+local:
+  hosts:
+    127.0.0.1:
+      ansible_connection: local
+...
