@@ -4,22 +4,26 @@
   tasks:
   - import_role:
       name: darthlukan.argocd_install.install_prereqs
+      vars:
+        state: "{{ state }}"
 
   - import_role:
       name: darthlukan.argocd_install.install_argocd
+      vars:
+        state: "{{ state }}"
 
   - name: Deploy workshop ArgoCD cluster
     k8s:
       namespace: argocd
       src: "{{ playbook_dir }}/files/workshop-argo-cluster-cr.yaml"
-      state: present
+      state: "{{ state }}"
       kubeconfig: "{{ kubeconfig }}"
 
   - name: Deploy workshop applications
     k8s:
       namespace: argocd
       src: "{{ playbook_dir }}/files/{{ item }}"
-      state: present
+      state: "{{ state }}" 
       kubeconfig: "{{ kubeconfig }}"
     loop:
       - workshop-argo-project-cr.yaml
