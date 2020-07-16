@@ -5,7 +5,7 @@ metadata:
   name: sample-infra 
   namespace: argocd
 spec:
-  project: default 
+  project: workshop
   source:
     repoURL: https://github.com/darthlukan/gitops-workshop.git
     targetRevision: HEAD
