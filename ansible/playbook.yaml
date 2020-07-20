@@ -11,6 +11,7 @@
       name: darthlukan.argocd_install.install_argocd
       vars:
         state: "{{ state }}"
+        scope: "{{ scope }}"
 
   - name: Deploy workshop ArgoCD cluster
     k8s:
