@@ -15,4 +15,8 @@ spec:
   server:
     route:
       enabled: true
+  rbac:
+    defaultPolicy: 'role:readonly'
+    policy: |
+      g, system:cluster-admins, role:admin
 ...
