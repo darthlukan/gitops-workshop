@@ -1,4 +1,5 @@
 ---
 collections:
   - name: darthlukan.argocd_install
+    version: 1.1.0
 ...
