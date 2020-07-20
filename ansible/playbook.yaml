@@ -4,14 +4,14 @@
   tasks:
   - import_role:
       name: darthlukan.argocd_install.install_prereqs
-      vars:
-        state: "{{ state }}"
+    vars:
+      state: "{{ state }}"
 
   - import_role:
       name: darthlukan.argocd_install.install_argocd
-      vars:
-        state: "{{ state }}"
-        scope: "{{ scope }}"
+    vars:
+      state: "{{ state }}"
+      scope: "{{ scope }}"
 
   - name: Deploy workshop ArgoCD cluster
     k8s:
