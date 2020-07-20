@@ -7,7 +7,7 @@ spec:
   type: git
   params:
   - name: url
-    value: https://gitlab.consulting.redhat.com/btomlins/gitops-workshop/sample-app
+    value: https://github.com/darthlukan/gitops-workshop
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
