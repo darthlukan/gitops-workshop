@@ -8,7 +8,7 @@
   - import_role:
       name: darthlukan.argocd_install.install_argocd
 
-  - name: "{{ 'Deploy' if state == 'present' else 'Remove'}} workshop applications"
+  - name: Deploy workshop applications
     k8s:
       namespace: argocd
       src: "{{ playbook_dir }}/files/{{ item }}"
@@ -19,4 +19,5 @@
       - workshop-argo-project-cr.yaml
       - workshop-sample-app-cr.yaml
       - workshop-sample-infra-cr.yaml
+    when: state == 'present'
 ...
