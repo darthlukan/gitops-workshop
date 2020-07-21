@@ -4,29 +4,18 @@
   tasks:
   - import_role:
       name: darthlukan.argocd_install.install_prereqs
-    vars:
-      state: "{{ state }}"
 
   - import_role:
       name: darthlukan.argocd_install.install_argocd
-    vars:
-      state: "{{ state }}"
-      scope: "{{ scope }}"
 
-  - name: Deploy workshop ArgoCD cluster
-    k8s:
-      namespace: argocd
-      src: "{{ playbook_dir }}/files/workshop-argo-cluster-cr.yaml"
-      state: "{{ state }}"
-      kubeconfig: "{{ kubeconfig }}"
-
-  - name: Deploy workshop applications
+  - name: "{{ 'Deploy' if state == 'present' else 'Remove'}} workshop applications"
     k8s:
       namespace: argocd
       src: "{{ playbook_dir }}/files/{{ item }}"
       state: "{{ state }}" 
       kubeconfig: "{{ kubeconfig }}"
     loop:
+      - workshop-argo-cluster-cr.yaml
       - workshop-argo-project-cr.yaml
       - workshop-sample-app-cr.yaml
       - workshop-sample-infra-cr.yaml
