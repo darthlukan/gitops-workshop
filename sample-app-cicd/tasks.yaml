@@ -1,0 +1,38 @@
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: build-image
+spec:
+  resources:
+    inputs:
+      - name: app-repo
+        type: git
+      - name: app-image
+        type: image
+    outputs:
+      - name: outputImage
+        type: image
+  params:
+    - name: pathToDockerfile
+      type: string
+      description: The path to the dockerfile to build
+      default: /workspace/gitops-workshop/sample-app/Dockerfile
+    - name: app-deploy-file-name
+      type: string
+      default: nodejs-rest-http
+  steps:
+    - name: build
+      securityContext:
+        privileged: true
+      image: appsody/appsody-buildah:0.5.3-buildah1.9.0
+      command: ['/bin/bash']
+      args:
+        - -c
+        - "cd /workspace/$gitsource && appsody build -v --buildah --buildah-options='--format=docker' -t $(inputs.resources.app-image.url) -f $(inputs.params.app-deploy-file-name)"
+      env:
+        - name: gitsource
+          value: app-repo
+      volumeMounts:
+        - mountPath: /var/lib/containers
+          name: varlibcontainers

@@ -1,12 +1,12 @@
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
 metadata:
-  name: build-and-deploy
+  name: build-increment-merge
 spec:
   resources:
-  - name: git-repo
+  - name: app-repo
     type: git
-  - name: image
+  - name: app-image
     type: image
   params:
   - name: deployment-name
@@ -15,36 +15,16 @@ spec:
   tasks:
   - name: build-image
     taskRef:
-      name: buildah
-      kind: ClusterTask
-    resources:
-      inputs:
-      - name: source
-        resource: git-repo
-      outputs:
-      - name: image
-        resource: image
-    params:
-    - name: TLSVERIFY
-      value: "false"
-  - name: apply-manifests
-    taskRef:
-      name: apply-manifests
-    resources:
-      inputs:
-      - name: source
-        resource: git-repo
-    runAfter:
-    - build-image
-  - name: update-deployment
-    taskRef:
-      name: update-deployment
-    resources:
-      inputs:
-      - name: image
-        resource: image
-    params:
-    - name: deployment
-      value: $(params.deployment-name)
-    runAfter:
-    - apply-manifests
+      name: build-image
+      kind: Task
+  # TODO
+  # - name: increment-version
+    # taskRef:
+      # name: increment-version
+    # runAfter:
+    # - build-image
+  # - name: git-merge
+    # taskRef:
+      # name: git-merge
+    # runAfter:
+    # - increment-version
