@@ -16,4 +16,8 @@ spec:
     namespace: sample-app 
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
 ...
