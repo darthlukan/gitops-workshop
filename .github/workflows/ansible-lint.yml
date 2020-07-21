@@ -28,4 +28,4 @@ jobs:
         targets: |
            playbook.yaml
         override-deps: |
-          ansible==2.9
+           ansible==2.9
