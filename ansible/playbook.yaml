@@ -12,7 +12,7 @@
     k8s:
       namespace: argocd
       src: "{{ playbook_dir }}/files/{{ item }}"
-      state: "{{ state }}" 
+      state: "{{ state }}"
       kubeconfig: "{{ kubeconfig }}"
     loop:
       - workshop-argo-cluster-cr.yaml
