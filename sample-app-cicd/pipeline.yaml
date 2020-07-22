@@ -3,28 +3,27 @@ kind: Pipeline
 metadata:
   name: build-increment-merge
 spec:
-  resources:
-  - name: app-repo
-    type: git
-  - name: app-image
-    type: image
-  params:
-  - name: deployment-name
-    type: string
-    description: name of the deployment to be patched
   tasks:
+  - name: git-clone
+    taskRef:
+      name: git-clone
+    params:
+      - name: url
+        value: $(params.repo-url)
+      - name: revision
+        value: $(params.git-branch) 
+    workspaces:
+      - name: output
+        workspace: git-clone-output
   - name: build-image
     taskRef:
-      name: build-image
-      kind: Task
-  # TODO
-  # - name: increment-version
-    # taskRef:
-      # name: increment-version
-    # runAfter:
-    # - build-image
-  # - name: git-merge
-    # taskRef:
-      # name: git-merge
-    # runAfter:
-    # - increment-version
+      name: buildah
+    params:
+      - name: IMAGE
+        value: $(params.image-name) 
+      - name: DOCKERFILE
+        value: $(params.workspace.git-clone-output.path)/Dockerfile
+    workspaces:
+      - name: gitops-workshop-repo-source 
+        persistentVolumeClaim:
+          claimName: git-clone-output
