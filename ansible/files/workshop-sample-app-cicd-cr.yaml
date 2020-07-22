@@ -1,0 +1,23 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sample-app-cicd
+  namespace: argocd
+spec:
+  project: workshop
+  source:
+    repoURL: https://github.com/darthlukan/gitops-workshop.git
+    targetRevision: HEAD
+    path: sample-app-cicd
+  destination:
+    # Need to get this automagically via detection
+    server: https://kubernetes.default.svc
+    namespace: sample-app-cicd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+...
