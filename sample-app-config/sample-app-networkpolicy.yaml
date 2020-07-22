@@ -5,6 +5,7 @@ metadata:
   name: allow-cicd-to-namespace
   namespace: sample-app
 spec:
+  podSelector: {}
   ingress:
     - from:
       - namespaceSelector:
