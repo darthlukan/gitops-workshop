@@ -1,10 +1,5 @@
-FROM image-registry.openshift-image-registry.svc:5000/gitops-workshop/nodejs-rest-http:latest
+FROM registry.redhat.io/rhel8/go-toolset
 
-WORKDIR sample-app
+USER nobody
 
-COPY package*.json ./
-
-RUN npm install openshift
-COPY path/to/bin /usr/bin/bin
-RUN rm -rf /path/to/source
-ENTRYPOINT ["/usr/bin/bin/", "--args"]
+ADD build/greet /usr/bin/greet
