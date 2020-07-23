@@ -8,21 +8,16 @@
   - import_role:
       name: darthlukan.argocd_install.install_argocd
 
-  - name: Deploy workshop ArgoCD cluster
-    k8s:
-      namespace: argocd
-      src: "{{ playbook_dir }}/files/workshop-argo-cluster-cr.yaml"
-      state: present
-      kubeconfig: "{{ kubeconfig }}"
-
   - name: Deploy workshop applications
     k8s:
       namespace: argocd
       src: "{{ playbook_dir }}/files/{{ item }}"
-      state: present
+      state: "{{ state }}"
       kubeconfig: "{{ kubeconfig }}"
     loop:
+      - workshop-argo-cluster-cr.yaml
       - workshop-argo-project-cr.yaml
       - workshop-sample-app-cr.yaml
       - workshop-sample-infra-cr.yaml
+    when: state == 'present'
 ...

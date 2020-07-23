@@ -1,0 +1,5 @@
+---
+namespace: argocd
+state: present
+scope: cluster
+...

@@ -1,0 +1,22 @@
+name: Ansible Lint
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+    # Run ansible-lint
+    - name: ansible-lint
+      uses: ansible/ansible-lint-action@master
+      with:
+        targets: ansible/playbook.yaml
+        override-deps: ansible==2.9
+        args: ""
