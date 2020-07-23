@@ -7,13 +7,16 @@ spec:
   serviceAccountName: build-bot
   pipelineRef:
     name: build-increment-merge
-  resources:
-    - name: git-repo
-      resourceRef:
-        name: app-repo
-    - name: image
-      resourceRef:
-        name: app-image
+  workspaces:
+    - name: gitops-workshop-repo-source
+      persistentVolumeClaim:
+        claimName: git-clone-output
   params:
-    - name: deployment-name
-      value: nodejs-rest-http
+    - name: repo-url
+      value: https://github.com/darthlukan/gitops-workshop.git
+    - name: git-branch
+      value: master
+    - name: image-name
+      value: quay.io/sscaling/my-image
+    - name: app-path
+      value: gitops-workshop/sample-app

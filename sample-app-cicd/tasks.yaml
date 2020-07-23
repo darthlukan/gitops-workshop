@@ -1,18 +1,9 @@
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: build-image
 spec:
-  resources:
-    inputs:
-      - name: app-repo
-        type: git
-      - name: app-image
-        type: image
-    outputs:
-      - name: outputImage
-        type: image
   params:
     - name: pathToDockerfile
       type: string

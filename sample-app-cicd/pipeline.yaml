@@ -1,8 +1,19 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: build-increment-merge
 spec:
+  params:
+  - name: repo-url
+    type: string
+  - name: git-branch
+    type: string
+  - name: image-name
+    type: string
+  - name: app-path
+    type: string
+  workspaces:
+  - name: gitops-workshop-repo-source
   tasks:
   - name: git-clone
     taskRef:
@@ -14,7 +25,7 @@ spec:
         value: $(params.git-branch) 
     workspaces:
       - name: output
-        workspace: git-clone-output
+        workspace: gitops-workshop-repo-source
   - name: build-image
     taskRef:
       name: buildah
@@ -22,8 +33,4 @@ spec:
       - name: IMAGE
         value: $(params.image-name) 
       - name: DOCKERFILE
-        value: $(params.workspace.git-clone-output.path)/Dockerfile
-    workspaces:
-      - name: gitops-workshop-repo-source 
-        persistentVolumeClaim:
-          claimName: git-clone-output
+        value: $(params.app-path)/Dockerfile
