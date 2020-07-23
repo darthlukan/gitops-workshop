@@ -14,6 +14,13 @@ spec:
     type: string
   workspaces:
   - name: gitops-workshop-repo-source
+    volumeClaimTemplate:
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
   tasks:
   - name: git-clone
     taskRef:
@@ -26,8 +33,9 @@ spec:
       - name: deleteExisting
         value: "true"
     workspaces:
-      - name: output
+      - name: source
         workspace: gitops-workshop-repo-source
+        subPath: source/
   - name: build-image
     taskRef:
       name: buildah
@@ -41,3 +49,4 @@ spec:
     workspaces:
     - name: source
       workspace: gitops-workshop-repo-source
+      subPath: source/
