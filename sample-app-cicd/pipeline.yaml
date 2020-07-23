@@ -23,12 +23,16 @@ spec:
         value: $(params.repo-url)
       - name: revision
         value: $(params.git-branch) 
+      - name: deleteExisting
+        value: t
     workspaces:
       - name: output
         workspace: gitops-workshop-repo-source
   - name: build-image
     taskRef:
       name: buildah
+    runAfter:
+      - git-clone
     params:
       - name: IMAGE
         value: $(params.image-name) 
