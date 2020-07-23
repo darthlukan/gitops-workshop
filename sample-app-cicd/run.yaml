@@ -17,6 +17,6 @@ spec:
     - name: git-branch
       value: master
     - name: image-name
-      value: quay.io/sscaling/my-image
+      value: quay.io/btomlins/greet:v0.0.1
     - name: app-path
-      value: gitops-workshop/sample-app
+      value: ../output/gitops-workshop/sample-app
