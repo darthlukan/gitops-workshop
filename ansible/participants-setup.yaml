@@ -1,0 +1,51 @@
+---
+- name: Setup Participant
+  hosts: local
+  vars:
+    participant_namespace: "{{ participant }}-gitops"
+  tasks:
+    - name: "{{ participant_namespace }} namespace is {{ state }}"
+      k8s:
+        api_version: v1
+        kind: Namespace
+        name: "{{ participant_namespace }}"
+        state: "{{ state }}"
+        kubeconfig: "{{ kubeconfig }}"
+
+    - name: "{{ participant }} namespace admin is {{ state }}"
+      k8s:
+        state: "{{ state }}"
+        namespace: "{{ participant_namespace }}"
+        definition:
+          api_version: rbac.authorization.k8s.io/v1
+          kind: RoleBinding
+          metadata:
+            name: "{{ participant }}-namespace-admin"
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: admin
+          subjects:
+            - kind: User
+              name: "{{ participant }}"
+              namespace: "{{ participant_namespace }}"
+
+    # TODO: There has to be a better way to guarantee idempotence here, the shell module is an ugly hack
+    - name: Branch {{ participant }} exists
+      shell: git branch | grep {{ participant|quote }} || echo 1
+      register: participant_branch_exists
+
+    # TODO: Determine if this will cause playbook runtime failure due to file checkout
+    #- name: Branch {{ participant }} present and checked out 
+    #  shell: git checkout -b {{ participant|quote }}
+    #  when: participant_branch_exists.stdout == 1
+
+    - name: Copy samples to {{ participant }}-sample-{app,app-cicd,app-config}
+      copy:
+        src: "{{ item }}"
+        dest: "../{{ participant }}-{{ item }}"
+      loop:
+        - sample-app-config
+        - sample-app-cicd
+        - sample-app
+...
