@@ -16,5 +16,9 @@ spec:
     spec:
       containers:
         - name: sample-app
-          image: ""
+          image: "quay.io/btomlins/greet:v0.0.1"
+          command:
+            - '/usr/bin/greet'
+          args:
+            - 'Hello participant\!'
 ...
