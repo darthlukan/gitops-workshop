@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: gitops-workshop-pipeline-run-
+  namespace: gitops-workshop
+spec:
+  serviceAccountName: build-bot
+  pipelineRef:
+    name: build-increment-merge
+  workspaces:
+    - name: gitops-workshop-repo-source
+      persistentVolumeClaim:
+        claimName: git-clone-output
+  params:
+    - name: repo-url
+      value: https://github.com/darthlukan/gitops-workshop.git
+    - name: git-branch
+      value: tekton-dev
+    - name: image-name
+      value: quay.io/btomlins/greet:v0.0.1
+    - name: app-path
+      value: ../output/gitops-workshop/sample-app
