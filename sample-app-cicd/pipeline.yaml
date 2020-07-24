@@ -37,7 +37,7 @@ spec:
       - name: IMAGE
         value: $(params.image-name) 
       - name: DOCKERFILE
-        value: $(params.app-path)/Dockerfile
+        value: $(workspaces.source.path)/$(params.app-path)/Dockerfile
     workspaces:
     - name: source
-      workspace: gitops-workshop-repo-source
+      workspace: gitops-workshop-repo-source  
