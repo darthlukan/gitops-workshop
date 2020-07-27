@@ -28,6 +28,11 @@ spec:
     workspaces:
       - name: output
         workspace: gitops-workshop-repo-source
+  # - name: make-sample-app
+    # taskRef:
+      # name: make-sample-app-task
+    # runAfter:
+      # - git-clone
   - name: build-image
     taskRef:
       name: buildah

@@ -1,0 +1,10 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: make-sample-app-task
+spec:
+  steps:
+    - name: make-build
+      image: go
+      command: 
+        - make build

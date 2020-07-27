@@ -4,7 +4,6 @@ metadata:
   generateName: gitops-workshop-pipeline-run-
   namespace: gitops-workshop
 spec:
-  serviceAccountName: gitops-workshop-sa
   pipelineRef:
     name: build-increment-merge
   workspaces:
@@ -15,7 +14,7 @@ spec:
     - name: repo-url
       value: https://github.com/darthlukan/gitops-workshop.git
     - name: git-branch
-      value: master
+      value: pipeline-workspaces
     - name: image-name
       value: quay.io/btomlins/greet:v0.0.1
     - name: app-path
