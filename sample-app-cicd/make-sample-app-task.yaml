@@ -15,10 +15,4 @@ spec:
       command: ["/usr/bin/make"]
       args:
         - "build"
-    - name: test-dir
-      image: registry.redhat.io/rhel8/go-toolset
-      workingDir: $(workspaces.src.path)/$(params.app-path)
-      command: ["ls"]
-      args:
-        - "-la"
     
