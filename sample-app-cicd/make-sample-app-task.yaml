@@ -3,8 +3,22 @@ kind: Task
 metadata:
   name: make-sample-app-task
 spec:
+  params:
+    - name: app-path
+      description: Path to sample-app
+  workspaces:
+    - name: src
   steps:
     - name: make-build
-      image: go
-      command: 
-        - make build
+      image: registry.redhat.io/rhel8/go-toolset
+      workingDir: $(workspaces.src.path)/$(params.app-path)
+      command: ["/usr/bin/make"]
+      args:
+        - "build"
+    - name: test-dir
+      image: registry.redhat.io/rhel8/go-toolset
+      workingDir: $(workspaces.src.path)/$(params.app-path)
+      command: ["ls"]
+      args:
+        - "-la"
+    

@@ -31,8 +31,14 @@ spec:
   - name: make-sample-app
     taskRef:
       name: make-sample-app-task
+    params:
+      - name: app-path
+        value: $(params.app-path)
     runAfter:
       - git-clone
+    workspaces:
+      - name: src
+        workspace: gitops-workshop-repo-source
   - name: build-image
     taskRef:
       name: buildah
