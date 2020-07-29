@@ -14,13 +14,6 @@ spec:
     type: string
   workspaces:
   - name: gitops-workshop-repo-source
-    volumeClaimTemplate:
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1Gi
   tasks:
   - name: git-clone
     taskRef:
@@ -33,20 +26,29 @@ spec:
       - name: deleteExisting
         value: "true"
     workspaces:
-      - name: source
+      - name: output
         workspace: gitops-workshop-repo-source
-        subPath: source/
+  - name: make-sample-app
+    taskRef:
+      name: make-sample-app-task
+    params:
+      - name: app-path
+        value: $(params.app-path)
+    runAfter:
+      - git-clone
+    workspaces:
+      - name: src
+        workspace: gitops-workshop-repo-source
   - name: build-image
     taskRef:
       name: buildah
     runAfter:
-      - git-clone
+      - make-sample-app
     params:
       - name: IMAGE
         value: $(params.image-name) 
       - name: DOCKERFILE
-        value: $(params.app-path)/Dockerfile
+        value: $(workspaces.source.path)/$(params.app-path)/Dockerfile
     workspaces:
     - name: source
-      workspace: gitops-workshop-repo-source
-      subPath: source/
+      workspace: gitops-workshop-repo-source  
