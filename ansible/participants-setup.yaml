@@ -36,14 +36,8 @@
         src: "{{ playbook_dir }}/templates/sample-app-config/{{ item }}"
         dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-config/{{ item }}"
       loop:
-        - ""
-
-    - name: Copy samples to {{ participant }}-sample-{app,app-cicd,app-config}
-      copy:
-        src: "../{{ item }}"
-        dest: "../{{ participant }}-{{ item }}"
-      loop:
-        - sample-app-config
-        - sample-app-cicd
-        - sample-app
+        - sample-app-deployment.yaml
+        - sample-app-namespace.yaml
+        - sample-app-networkpolicy.yaml
+        - VERSION
 ...
