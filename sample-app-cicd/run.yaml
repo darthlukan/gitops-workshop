@@ -14,8 +14,8 @@ spec:
     - name: repo-url
       value: https://github.com/darthlukan/gitops-workshop.git
     - name: git-branch
-      value: master
+      value: pipeline-workspaces
     - name: image-name
-      value: quay.io/btomlins/greet:v0.0.1
+      value: quay.io/sscaling/gitops-workshop:v0.0.1
     - name: app-path
       value: sample-app
