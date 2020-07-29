@@ -36,8 +36,16 @@
         src: "{{ playbook_dir }}/templates/sample-app-config/{{ item }}"
         dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-config/{{ item }}"
       loop:
-        - sample-app-deployment.yaml
-        - sample-app-namespace.yaml
-        - sample-app-networkpolicy.yaml
+        - sample-app-deployment.yaml.j2
+        - sample-app-namespace.yaml.j2
+        - sample-app-networkpolicy.yaml.j2
         - VERSION
+
+    - name: Copy CR templates to {{ participant }}-customresources
+      template:
+        src: "{{ playbook_dir }}/templates/files/{{ item }}"
+        dest: "{{ playbook_dir }}/../{{ participant }}-customresources/{{ item }}"
+      loop:
+        - workshop-sample-app-cicd-cr.yaml.j2
+        - workshop-sample-app-cr.yaml.j2
 ...
