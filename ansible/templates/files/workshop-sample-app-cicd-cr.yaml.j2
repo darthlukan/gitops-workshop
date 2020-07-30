@@ -8,7 +8,7 @@ spec:
   project: workshop
   source:
     repoURL: https://github.com/darthlukan/gitops-workshop.git
-    targetRevision: HEAD
+    targetRevision: {{ participant }} 
     path: {{ participant }}-sample-app-cicd
   destination:
     # Need to get this automagically via detection
