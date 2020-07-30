@@ -31,7 +31,15 @@
               name: "{{ participant }}"
               namespace: "{{ participant_namespace }}"
 
-    - name: Copy samples templates to {{ participant }}-sample-{app,app-cicd,app-config}
+    - name: "{{ 'Create' if state == 'present' else 'Remove' }} {{ participant }} dirs"
+      file:
+        state: "{{ 'directory' if state == 'present' else 'absent' }}"
+        path: "{{ playbook_dir }}/../{{ participant }}-{{ item }}"
+      loop:
+        - sample-app-config
+        - customresources
+
+    - name: Render sample templates to {{ participant }}-sample-app-config
       template:
         src: "{{ playbook_dir }}/templates/sample-app-config/{{ item }}.yaml.j2"
         dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-config/{{ item }}.yaml"
@@ -39,13 +47,14 @@
         - sample-app-deployment
         - sample-app-namespace
         - sample-app-networkpolicy
-        - VERSION
+      when: state == 'present'
 
-    - name: Copy CR templates to {{ participant }}-customresources
+    - name: Render CR templates to {{ participant }}-customresources
       template:
         src: "{{ playbook_dir }}/templates/files/{{ item }}.yaml.j2"
         dest: "{{ playbook_dir }}/../{{ participant }}-customresources/{{ item }}.yaml"
       loop:
         - workshop-sample-app-cicd-cr
         - workshop-sample-app-cr
+      when: state == 'present'
 ...
