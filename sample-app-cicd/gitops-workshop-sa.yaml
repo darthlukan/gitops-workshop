@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: gitops-workshop-sa
-  imagePullSecrets:
-      - name: gitops-workshop-robot-pull-secret
-      - name: gitops-workshop-redhat-registry-pull-secret
