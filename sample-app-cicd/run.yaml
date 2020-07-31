@@ -5,17 +5,23 @@ metadata:
   namespace: gitops-workshop
 spec:
   pipelineRef:
-    name: build-increment-merge
+    name: build-increment-commit
   workspaces:
     - name: gitops-workshop-repo-source
       persistentVolumeClaim:
         claimName: git-clone-output
   params:
     - name: repo-url
-      value: https://github.com/darthlukan/gitops-workshop.git
+      value: https://github.com/darthlukan/gitops-workshop
     - name: git-branch
-      value: pipeline-workspaces
+      value: version-increment
     - name: image-name
-      value: quay.io/sscaling/gitops-workshop:v0.0.1
+      value: quay.io/sscaling/gitops-workshop
+    - name: image-version
+      value: v0.0.3
     - name: app-path
       value: sample-app
+    - name: app-config-path
+      value: sample-app-config
+    - name: app-config-filename
+      value: sample-app-deployment.yaml
