@@ -149,11 +149,41 @@ $ cd ansible
 $ ansible-playbook -i inventory participant-setup.yaml -e kubeconfig=/path/to/kubeconfig -e participant="YOUR_USERNAME"
 ```
 
+Make sure you are logged into the cluster with a user that has `self-provisioner` set, then execute the following to
+create your namespace and set yourself as a namespace admin:
 
+OpenShift:
 
+```
+$ oc new-project $YOUR_USERNAME-gitops
+```
 
+For Kubernetes, you will need elevated permissions to create the namespace and then assign the `admin` cluster role.
+Kubernetes:
 
+```
+$ kubectl config set-context default/$CLUSTER/$YOUR_ADMIN_USERNAME --user=$YOUR_ADMIN_USERNAME/$CLUSTER --cluster=$CLUSTER --namespace=default
+$ kubectl create namespace $YOUR_USERNAME-gitops
+$ kubectl create rolebinding $YOUR_USERNAME-namespace-admin --clusterrole=admin --user=$YOUR_USERNAME -n $YOUR_USERNAME-gitops
+$ kubectl config set-context $YOUR_USERNAME-gitops/$CLUSTER/$YOUR_USERNAME --user=$YOUR_USERNAME/$CLUSTER --cluster=$CLUSTER --namespace=$YOUR_USERNAME-gitops
+```
 
+> *NOTE:* With `self-provisioner` permissions set in OpenShift, you do not need to create the `RoleBinding`, it is done
+> for you as part of the project request.
 
+Now we will create the directories to work from and copy over the files we'll be editing:
 
+```
+$ cd /path/to/gitops-workshop
+$ cp -r sample-app-config $YOUR_USERNAME-sample-app-config
+$ mkdir $YOUR_USERNAME-customresources
+$ cp -r ansible/files/workshop-sample-app-cicd-cr.yaml $YOUR_USERNAME-customresources
+$ cp -r ansible/files/workshop-sample-app-cr.yaml $YOUR_USERNAME-customresources
+```
+
+Next we need to edit the files so that they are personalized and don't cause conflicts with any other workshop
+participants:
+
+```
+```
 
