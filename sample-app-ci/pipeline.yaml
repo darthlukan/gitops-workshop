@@ -45,25 +45,24 @@ spec:
     workspaces:
       - name: src
         workspace: gitops-workshop-repo-source
-  # - name: build-image
-    # taskRef:
-      # name: buildah
-    # runAfter:
-      # - make-sample-app
-    # params:
-      # - name: IMAGE
-        # value: $(params.image-name):$(params.image-version)
-      # - name: DOCKERFILE
-        # value: $(workspaces.source.path)/$(params.app-path)/Dockerfile
-    # workspaces:
-    # - name: source
-      # workspace: gitops-workshop-repo-source  
+  - name: build-image
+    taskRef:
+      name: buildah
+    runAfter:
+      - make-sample-app
+    params:
+      - name: IMAGE
+        value: $(params.image-name):$(params.image-version)
+      - name: DOCKERFILE
+        value: $(workspaces.source.path)/$(params.app-path)/Dockerfile
+    workspaces:
+    - name: source
+      workspace: gitops-workshop-repo-source  
   - name: version-increment
     taskRef:
       name: version-increment-task
     runAfter:
-      #- build-image
-      - make-sample-app
+      - build-image
     workspaces:
       - name: src
         workspace: gitops-workshop-repo-source
