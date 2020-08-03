@@ -1,0 +1,23 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ participant }}-sample-app
+  namespace: argocd
+spec:
+  project: workshop
+  source:
+    repoURL: https://github.com/darthlukan/gitops-workshop.git
+    targetRevision: {{ participant }}
+    path: {{ participant }}-sample-app-config
+  destination:
+    # Need to get this automagically via detection
+    server: https://kubernetes.default.svc
+    namespace: {{ participant }}-sample-app 
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+...
