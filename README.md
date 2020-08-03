@@ -142,7 +142,7 @@ DEMO SAMPLE APP RECONCILIATION
 
 ### Prepare your environment
 
-> If you have trouble following along in this section execute the `ansible/participant-setup.yaml` playbook like so:
+> _If you have trouble following along in this section execute the `ansible/participant-setup.yaml` playbook like so:_
 
 ```
 $ cd ansible
