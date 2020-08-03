@@ -2,4 +2,7 @@
 namespace: argocd
 state: present
 scope: cluster
+
+# Add default kubeconfig path
+kubeconfig: "/home/{{ ansible_user_id }}/.crc/machines/crc/kubeconfig"
 ...
