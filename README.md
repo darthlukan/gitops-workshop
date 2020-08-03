@@ -41,6 +41,9 @@ work well enough for small audiences.
 - Sample Application Walkthrough
 - Sample App CI Walkthrough
 - Sample App GitOps in Action
+- Prepare your environment
+- Making changes
+- What just happened?
 - Sample Infrastructure Demo
 - Considerations for production implementations
 - Further reading
@@ -133,3 +136,24 @@ is updated with the image it just built.
 
 
 ### Sample App GitOps in Action
+
+DEMO SAMPLE APP RECONCILIATION
+
+
+### Prepare your environment
+
+> If you have trouble following along in this section execute the `ansible/participant-setup.yaml` playbook like so:
+
+```
+$ cd ansible
+$ ansible-playbook -i inventory participant-setup.yaml -e kubeconfig=/path/to/kubeconfig -e participant="YOUR_USERNAME"
+```
+
+
+
+
+
+
+
+
+
