@@ -1,0 +1,60 @@
+---
+- name: Setup Participant
+  hosts: local
+  vars:
+    participant_namespace: "{{ participant }}-gitops"
+  tasks:
+    - name: "{{ participant_namespace }} namespace is {{ state }}"
+      k8s:
+        api_version: v1
+        kind: Namespace
+        name: "{{ participant_namespace }}"
+        state: "{{ state }}"
+        kubeconfig: "{{ kubeconfig }}"
+
+    - name: "{{ participant }} namespace admin is {{ state }}"
+      k8s:
+        state: "{{ state }}"
+        kubeconfig: "{{ kubeconfig }}"
+        definition:
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: RoleBinding
+          metadata:
+            name: "{{ participant }}-namespace-admin"
+            namespace: "{{ participant_namespace }}"
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: admin
+          subjects:
+            - kind: User
+              name: "{{ participant }}"
+              namespace: "{{ participant_namespace }}"
+
+    - name: "{{ 'Create' if state == 'present' else 'Remove' }} {{ participant }} dirs"
+      file:
+        state: "{{ 'directory' if state == 'present' else 'absent' }}"
+        path: "{{ playbook_dir }}/../{{ participant }}-{{ item }}"
+      loop:
+        - sample-app-config
+        - customresources
+
+    - name: Render sample templates to {{ participant }}-sample-app-config
+      template:
+        src: "{{ playbook_dir }}/templates/sample-app-config/{{ item }}.yaml.j2"
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-config/{{ item }}.yaml"
+      loop:
+        - sample-app-deployment
+        - sample-app-namespace
+        - sample-app-networkpolicy
+      when: state == 'present'
+
+    - name: Render CR templates to {{ participant }}-customresources
+      template:
+        src: "{{ playbook_dir }}/templates/files/{{ item }}.yaml.j2"
+        dest: "{{ playbook_dir }}/../{{ participant }}-customresources/{{ item }}.yaml"
+      loop:
+        - workshop-sample-app-cicd-cr
+        - workshop-sample-app-cr
+      when: state == 'present'
+...
