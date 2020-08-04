@@ -55,7 +55,7 @@ work well enough for small audiences.
 In this workshop we will cover GitOps concepts in the context of a sample application with a CI/CD pipeline. We will use
 Tekton for our CI (Continuous Integration) solution and ArgoCD for CD (Continuous Delivery) solution. There are other
 tools we could use for CI/CD under a GitOps model on Kubernetes/OpenShift, however Tekton was purpose-built to be a
-cloud and Kubernetes native CI solution and ArgoCD provides a class 5 ("Autopilot") operator for Kuberenetes. The important
+cloud and Kubernetes native CI solution and ArgoCD provides a class 5 ("Autopilot") operator for Kubernetes. The important
 parts are the functionality, level of automation, and familiarity of Kubernetes objects so as not to distract
 participants from the purpose of the workshop: Understanding GitOps and its value as a methodology.
 
