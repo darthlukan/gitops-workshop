@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: sample-app
-          image: "quay.io/sscaling/gitops-workshop:v0.0.9"
+          image: "quay.io/sscaling/gitops-workshop:v0.0.1"
           command:
             - '/usr/bin/greet'
           args:
