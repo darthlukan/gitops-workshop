@@ -2,18 +2,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ participant }}-sample-app-cicd
+  name: {{ participant }}-sample-app-ci
   namespace: argocd
 spec:
   project: workshop
   source:
     repoURL: https://github.com/darthlukan/gitops-workshop.git
     targetRevision: {{ participant }} 
-    path: {{ participant }}-sample-app-cicd
+    path: {{ participant }}-sample-app-ci
   destination:
     # Need to get this automagically via detection
     server: https://kubernetes.default.svc
-    namespace: {{ participant }}-sample-app-cicd
+    namespace: {{ participant }}-sample-app-ci
   finalizers:
   - resources-finalizer.argocd.argoproj.io
   syncPolicy:
