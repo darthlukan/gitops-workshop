@@ -19,5 +19,6 @@
       - workshop-argo-project-cr.yaml
       - workshop-sample-app-cr.yaml
       - workshop-sample-infra-cr.yaml
+      - workshop-sample-app-ci-cr.yaml
     when: state == 'present'
 ...
