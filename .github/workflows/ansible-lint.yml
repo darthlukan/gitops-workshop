@@ -17,10 +17,13 @@ jobs:
     - name: ansible-lint
       uses: ansible/ansible-lint-action@master
       with:
-        targets: "ansible/*.yaml"
+        targets: |
+          ansible/playbook.yaml
+          ansible/participants-setup.yaml
         override-deps: ansible==2.9
-        args: |
-          --exclude='ansible/files'
-          --exclude='ansible/vars'
-          --exclude='ansible/templates'
-          --exclude='ansible/requirements.yaml'
+        args: ""
+        # args: |
+        #   --exclude=ansible/files
+        #   --exclude=ansible/vars
+        #   --exclude=ansible/templates
+        #   --exclude=ansible/requirements.yaml
