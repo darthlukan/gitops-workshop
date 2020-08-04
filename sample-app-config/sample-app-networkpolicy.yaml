@@ -2,7 +2,7 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: allow-cicd-to-namespace
+  name: allow-ci-to-namespace
   namespace: sample-app
 spec:
   podSelector: {}
@@ -10,6 +10,6 @@ spec:
     - from:
       - namespaceSelector:
           matchLabels:
-            app.kubernetes.io/instance: sample-app-cicd
+            app.kubernetes.io/instance: sample-app-ci
         podSelector: {}
 ...
