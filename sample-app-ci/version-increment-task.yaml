@@ -11,7 +11,7 @@ spec:
   workspaces:
     - name: src
   steps:
-    - name: make-build
+    - name: increment-version
       image: registry.redhat.io/rhel8/go-toolset
       workingDir: $(workspaces.src.path)/$(params.app-config-path)
       command: ["/usr/bin/sed"]
