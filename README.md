@@ -212,3 +212,29 @@ content to our own GitHub accounts, copied and personalized the files with which
 
 
 ### Initial Deployment
+
+In this section we will tell ArgoCD to deploy our application and pipeline. We will be using `CustomResources`, which
+are instances of a `CustomResourceDefinition`, to represent our deployments. In this case we will be using the
+`Application` "type" object to tell ArgoCD about our `sample-app` and `sample-app-ci` pipeline.
+
+> *NOTE:* Execute the following playbook if you have difficulty following along or just wish to save time:
+
+```
+$ cd /path/to/gitops-workshop/ansible
+$ ansible-playbook -i inventory participant-deploy.yaml -e kubeconfig=/path/to/kubeconfig -e participant=$YOUR_USERNAME
+```
+
+First, let's deploy the application and ci pipeline. You will need to change to the `$YOUR_USERNAME-customresources` directory and use
+either `oc` or `kubectl` to apply the `CustomResources` depending on the cluster type you're using ("Vanilla" Kubernetes
+or OpenShift):
+
+```
+$ cd $YOUR_USERNAME-customresources
+$ oc apply -f workshop-sample-app-cr.yaml
+$ oc apply -f workshop-sample-app-ci-cr.yaml
+```
+
+TODO: Walkthrough of the console so users can see the results.
+
+
+### Making Changes
