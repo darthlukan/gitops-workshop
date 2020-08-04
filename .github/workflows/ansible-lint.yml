@@ -20,7 +20,7 @@ jobs:
         targets: "ansible/*.yaml"
         override-deps: ansible==2.9
         args: |
-          --exclude=ansible/files
-          --exclude=ansible/vars
-          --exclude=ansible/templates
-          --exclude=ansible/requirements.yaml
+          --exclude='ansible/files'
+          --exclude='ansible/vars'
+          --exclude='ansible/templates'
+          --exclude='ansible/requirements.yaml'
