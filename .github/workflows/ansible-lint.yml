@@ -20,6 +20,7 @@ jobs:
         targets: |
           ansible/playbook.yaml
           ansible/participants-setup.yaml
+          ansible/participants-deploy.yaml
         override-deps: ansible==2.9
         args: ""
         # args: |
