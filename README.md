@@ -41,9 +41,10 @@ work well enough for small audiences.
 - Sample Application Walkthrough
 - Sample App CI Walkthrough
 - Sample App GitOps in Action
-- Prepare your environment
-- Making changes
-- What just happened?
+- Prepare Your Environment
+- Initial Deployment
+- Making Changes
+- What Just Happened?
 - Sample Infrastructure Demo
 - Considerations for production implementations
 - Further reading
@@ -140,14 +141,17 @@ is updated with the image it just built.
 DEMO SAMPLE APP RECONCILIATION
 
 
-### Prepare your environment
+### Prepare Your Environment
 
-> _If you have trouble following along in this section execute the `ansible/participant-setup.yaml` playbook like so:_
+*IMPORTANT!* _You must first fork this repository, [https://github.com/darthlukan/gitops-workshop](https://github.com/darthlukan/gitops-workshop), to your GitHub account._
 
 ```
 $ cd ansible
 $ ansible-playbook -i inventory participant-setup.yaml -e kubeconfig=/path/to/kubeconfig -e participant="YOUR_USERNAME"
 ```
+
+> *INSTRUCTION:* Execute the playbook referenced above during the workshop in the interest of time. The steps executed by the
+> playbook are described below.
 
 Make sure you are logged into the cluster with a user that has `self-provisioner` set, then execute the following to
 create your namespace and set yourself as a namespace admin:
@@ -177,7 +181,7 @@ Now we will create the directories to work from and copy over the files we'll be
 $ cd /path/to/gitops-workshop
 $ cp -r sample-app-config $YOUR_USERNAME-sample-app-config
 $ mkdir $YOUR_USERNAME-customresources
-$ cp -r ansible/files/workshop-sample-app-cicd-cr.yaml $YOUR_USERNAME-customresources
+$ cp -r ansible/files/workshop-sample-app-ci-cr.yaml $YOUR_USERNAME-customresources
 $ cp -r ansible/files/workshop-sample-app-cr.yaml $YOUR_USERNAME-customresources
 ```
 
@@ -185,5 +189,26 @@ Next we need to edit the files so that they are personalized and don't cause con
 participants:
 
 ```
+$ cd $YOUR_USERNAME-sample-app-config
+$ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' sample-app-deployment.yaml sample-app-namespace.yaml sample-app-networkpolicy.yaml
+$ cd ../$YOUR_USERNAME-customresources
+$ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' workshop-sample-app-ci-cr.yaml workshop-sample-app-cr.yaml
 ```
 
+*NOTE:* _The following is NOT completed by the playbook referenced at the top of this section and must be executed manually._
+
+Create a branch that is named `$YOUR_USERNAME` and push your first commit:
+
+```
+$ git checkout -b $YOUR_USERNAME
+$ git add $YOUR_USERNAME-sample-app-config $YOUR_USERNAME-customresources
+$ git commit -m "environment set up"
+$ git push -u origin $YOUR_USERNAME
+```
+
+That's it, your environment is now prepared for the rest of the workshop content. To recap, we've forked the workshop
+content to our own GitHub accounts, copied and personalized the files with which we'll be working, and established our
+"feature" branch.
+
+
+### Initial Deployment
