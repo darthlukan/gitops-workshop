@@ -54,7 +54,7 @@
         src: "{{ playbook_dir }}/templates/files/{{ item }}.yaml.j2"
         dest: "{{ playbook_dir }}/../{{ participant }}-customresources/{{ item }}.yaml"
       loop:
-        - workshop-sample-app-cicd-cr
+        - workshop-sample-app-ci-cr
         - workshop-sample-app-cr
       when: state == 'present'
 ...
