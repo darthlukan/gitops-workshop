@@ -1,0 +1,13 @@
+---
+- name: "{{ 'Deploy' if state == 'present' else 'Remove' }} CustomResources"
+  hosts: local
+  tasks:
+    - name: "{{ 'Apply' if state == 'present' else 'Remove' }} CR Manifests"
+      k8s:
+        src: "{{ playbook_dir }}/../{{ participant }}-customresources/{{ item }}"
+        kubeconfig: "{{ kubeconfig }}"
+        state: "{{ state }}"
+      loop:
+        - workshop-sample-app-cr.yaml
+        - workshop-sample-app-ci-cr.yaml
+...
