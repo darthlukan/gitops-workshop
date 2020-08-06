@@ -33,7 +33,7 @@
 
     - name: Copy sample-app-ci to {{ participant }}-sample-app-ci
       copy:
-        src: "{{ playbook_dir }}/../sample-app-ci"
+        src: "{{ playbook_dir }}/../sample-app-ci/"
         dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci"
       when: state == 'present'
 
