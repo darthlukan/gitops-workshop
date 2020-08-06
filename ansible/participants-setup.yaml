@@ -31,6 +31,18 @@
               name: "{{ participant }}"
               namespace: "{{ participant_namespace }}"
 
+    - name: Copy sample-app-ci to {{ participant }}-sample-app-ci
+      copy:
+        src: "{{ playbook_dir }}/../sample-app-ci"
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci"
+      when: state == 'present'
+
+    - name: Remove {{ participant }}-sample-app-ci
+      file:
+        state: "{{ state }}"
+        path: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci"
+      when: state != 'present'
+
     - name: "{{ 'Create' if state == 'present' else 'Remove' }} {{ participant }} dirs"
       file:
         state: "{{ 'directory' if state == 'present' else 'absent' }}"
