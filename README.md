@@ -145,9 +145,11 @@ DEMO SAMPLE APP RECONCILIATION
 
 *IMPORTANT!* _You must first fork this repository, [https://github.com/darthlukan/gitops-workshop](https://github.com/darthlukan/gitops-workshop), to your GitHub account._
 
+> *NOTE:* Your username MUST be entered as all lowercase characters to create a valid OCP namespace.
+
 ```
 $ cd ansible
-$ ansible-playbook -i inventory participant-setup.yaml -e kubeconfig=/path/to/kubeconfig -e participant="YOUR_USERNAME"
+$ ansible-playbook -i inventory participants-setup.yaml -e kubeconfig=/path/to/kubeconfig -e participant="YOUR_USERNAME"
 ```
 
 > *INSTRUCTION:* Execute the playbook referenced above during the workshop in the interest of time. The steps executed by the
@@ -221,7 +223,7 @@ are instances of a `CustomResourceDefinition`, to represent our deployments. In 
 
 ```
 $ cd /path/to/gitops-workshop/ansible
-$ ansible-playbook -i inventory participant-deploy.yaml -e kubeconfig=/path/to/kubeconfig -e participant=$YOUR_USERNAME
+$ ansible-playbook -i inventory participants-deploy.yaml -e kubeconfig=/path/to/kubeconfig -e participant=$YOUR_USERNAME
 ```
 
 First, let's deploy the application and ci pipeline. You will need to change to the `$YOUR_USERNAME-customresources` directory and use
