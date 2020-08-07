@@ -352,6 +352,8 @@ $ git commit -m "Add $YOUR_USERNAME to deployment"
 $ git push -u origin $YOUR_USERNAME
 ```
 
+TODO: Screenshots of the result
+
 ### Further Reading
 
 For those that wish to learn more about GitOps, and the tools that are currently available to implement GitOps workflows quickly and efficiently, check out the following resources:
