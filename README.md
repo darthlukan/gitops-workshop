@@ -266,12 +266,86 @@ Now comes the fun part. We are going to make some changes to our files in git, c
 automatically syncs those changes so that we don't have to manually log into the cluster and perform the deployment
 operation ourselves.
 
+> *NOTE:* Execute the following playbook to save time or if you encounter an error attempting to follow the steps in
+> this section:
+
 ```
-$ vim $YOUR_USERNAME-sample-app-config/sample-app-deployment.yaml
->> add metadata.labels.app: sample-app
->> :wq
+$ cd /path/to/gitops-workshop/ansible
+$ ansible-playbook -i inventory participants-make-changes.yaml -e kubeconfig=/path/to/kubeconfig -e participant=$YOUR_USERNAME
+```
+
+First let's make a small change, adding a more personalized greeting to the `sample-app-deployment.yaml` manifest. The
+provided `sample-app-deployment.yaml` defaults to a very generic greeting, `'Hello participant\!'` as described by the
+file content below:
+
+```
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app
+  namespace: sample-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+    spec:
+      containers:
+        - name: sample-app
+          image: "quay.io/sscaling/gitops-workshop:v0.0.1"
+          command:
+            - '/usr/bin/greet'
+          args:
+            - 'Hello participant\!'
+...
+```
+
+To change this, you can use your text editor or execute the following commands:
+
+```
+$ cd /path/to/gitops-workshop/$YOUR_USERNAME-sample-app-config
+$ sed -i 's/participant/$YOUR_USERNAME/g' sample-app-deployment.yaml
+```
+
+The result is that the arg on line `25` no longer says `'Hello participant\!', but instead relects whatever
+`$YOUR_USERNAME` is. For example: `'Hello btomlins\!'`. If `$YOUR_USERNAME` is `btomlins`, then you should see the
+following completed file:
+
+```
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app
+  namespace: sample-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+    spec:
+      containers:
+        - name: sample-app
+          image: "quay.io/sscaling/gitops-workshop:v0.0.1"
+          command:
+            - '/usr/bin/greet'
+          args:
+            - 'Hello btomlins\!'
+...
+```
+
+```
 $ git add $YOUR_USERNAME-sample-app-config/sampe-app-deployment.yaml
-$ git commit -m "Add label to deployment"
+$ git commit -m "Add $YOUR_USERNAME to deployment"
 $ git push -u origin $YOUR_USERNAME
 ```
 
