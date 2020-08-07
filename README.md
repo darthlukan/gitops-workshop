@@ -275,3 +275,16 @@ $ git commit -m "Add label to deployment"
 $ git push -u origin $YOUR_USERNAME
 ```
 
+### Further Reading
+
+For those that wish to learn more about GitOps, and the tools that are currently available to implement GitOps workflows quickly and efficiently, check out the following resources:
+
+- [ArgoCD - GitOps continuous delivery tool for Kubernetes](https://argoproj.github.io/argo-cd/ "ArgoCD Overview")
+
+- [Tekton - Continuous integration and delivery solution for Kubernetes](https://tekton.dev/docs/ "Tekton Docs")
+
+- [OpenShift Pipelines - OCP specific Tekton integration](https://www.openshift.com/learn/topics/pipelines "OpenShift Pipelines Overview")
+
+- [Introduction to GitOps with OpenShift](https://www.openshift.com/blog/introduction-to-gitops-with-openshift "GitOps with OpenShift")
+
+- [GitOps Overview - High level explanation of GitOps Philosophy](https://www.gitops.tech/ "GitOps")
