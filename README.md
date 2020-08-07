@@ -236,8 +236,6 @@ $ oc apply -f workshop-sample-app-cr.yaml
 $ oc apply -f workshop-sample-app-ci-cr.yaml
 ```
 
-TODO: Walkthrough of the console so users can see the results.
-
 Inside your OCP console, from the navigation pane you can select Networking -> Routes to view the available URLs for connection to your deployed ArgoCD instance.
 
 > *NOTE:* You will need to have the `argocd` project selected to view the relevant routes.
