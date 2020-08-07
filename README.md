@@ -25,7 +25,7 @@ participating in the workshop.
 ### Environment
 
 For the best possible performance, it is recommended the workshop be conducted on a hosted (either bare-metal or via cloud provider)
-Red Hat OpenShift Container Platform (OCP) 4.x or Kubernetes 1.16+ cluster. However, the following local solutions have been tested and verified to
+Red Hat OpenShift 4.x or Kubernetes 1.16+ cluster. However, the following local solutions have been tested and verified to
 work well enough for small audiences.
 
 - [Code Ready Containers 1.13+](https://access.redhat.com/documentation/en-us/red_hat_codeready_containers/1.13/html/getting_started_guide/index)
@@ -145,7 +145,7 @@ DEMO SAMPLE APP RECONCILIATION
 
 *IMPORTANT!* _You must first fork this repository, [https://github.com/darthlukan/gitops-workshop](https://github.com/darthlukan/gitops-workshop), to your GitHub account._
 
-> *NOTE:* Your username MUST be entered as all lowercase characters to create a valid OCP namespace.
+> *NOTE:* Your username MUST be entered as all lowercase characters to create a valid namespace.
 
 ```
 $ cd ansible
@@ -236,7 +236,7 @@ $ oc apply -f workshop-sample-app-cr.yaml
 $ oc apply -f workshop-sample-app-ci-cr.yaml
 ```
 
-Inside your OCP console, from the navigation pane you can select Networking -> Routes to view the available URLs for connection to your deployed ArgoCD instance.
+Inside your cluster console, from the navigation pane you can select Networking -> Routes to view the available URLs for connection to your deployed ArgoCD instance.
 
 > *NOTE:* You will need to have the `argocd` project selected to view the relevant routes.
 
