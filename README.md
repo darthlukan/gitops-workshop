@@ -25,7 +25,7 @@ participating in the workshop.
 ### Environment
 
 For the best possible performance, it is recommended the workshop be conducted on a hosted (either bare-metal or via cloud provider)
-Red Hat OpenShift 4.x or Kubernetes 1.16+ cluster. However, the following local solutions have been tested and verified to
+Red Hat OpenShift Container Platform (OCP) 4.x or Kubernetes 1.16+ cluster. However, the following local solutions have been tested and verified to
 work well enough for small audiences.
 
 - [Code Ready Containers 1.13+](https://access.redhat.com/documentation/en-us/red_hat_codeready_containers/1.13/html/getting_started_guide/index)
@@ -238,7 +238,28 @@ $ oc apply -f workshop-sample-app-ci-cr.yaml
 
 TODO: Walkthrough of the console so users can see the results.
 
-![ArgoCD Route](/docs/images/01&#32;-&#32;ArgoCD&#32;Route.png)
+Inside your OCP console, from the navigation pane you can select Networking -> Routes to view the available URLs for connection to your deployed ArgoCD instance.
 
+> *NOTE:* You will need to have the `argocd` project selected to view the relevant routes.
+
+![ArgoCD Routes](/docs/images/01&#32;-&#32;ArgoCD&#32;Route.png "ArgoCD Routes")
+
+Click on the URL in the Location column for the route named `workshop-argocd-server`. This will open the ArgoCD login page: 
+
+![ArgoCD Login Page](/docs/images/02&#32;-&#32;ArgoCD&#32;Login.png "ArgoCD Login Page")
+
+In order to login to the ArgoCD server, you will need to retrieve the admin password from the Argo CD deployed secret. Execute the following commands to retrieve the password:
+
+```
+$ oc project argocd
+$ export ARGOCD_CLUSTER_NAME=workshop
+$ oc get secret $ARGOCD_CLUSTER_NAME-argocd-cluster -o jsonpath='{.data.admin\.password}' | base64 -d
+```
+
+The returned string will be the password for the admin user login to Argo CD.
+
+You will see the Argo CD Applications dashboard, and you should see the pipelines we created for our `workshop` project:
+
+![ArgoCD Console](/docs/images/03&#32;-&#32;ArgoCD&#32;Console.png "ArgoCD Console")
 
 ### Making Changes
