@@ -262,6 +262,19 @@ You will see the Argo CD Applications dashboard, and you should see the pipeline
 
 ### Making Changes
 
+Now comes the fun part. We are going to make some changes to our files in git, commit and push them, and watch how ArgoCD
+automatically syncs those changes so that we don't have to manually log into the cluster and perform the deployment
+operation ourselves.
+
+```
+$ vim $YOUR_USERNAME-sample-app-config/sample-app-deployment.yaml
+>> add metadata.labels.app: sample-app
+>> :wq
+$ git add $YOUR_USERNAME-sample-app-config/sampe-app-deployment.yaml
+$ git commit -m "Add label to deployment"
+$ git push -u origin $YOUR_USERNAME
+```
+
 ### Further Reading
 
 For those that wish to learn more about GitOps, and the tools that are currently available to implement GitOps workflows quickly and efficiently, check out the following resources:
