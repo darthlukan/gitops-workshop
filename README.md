@@ -343,6 +343,9 @@ spec:
 ...
 ```
 
+In order for ArgoCD to act upon this change, we will need to commit our changes and push them to our remote repo. You
+can do so using the following commands:
+
 ```
 $ git add $YOUR_USERNAME-sample-app-config/sampe-app-deployment.yaml
 $ git commit -m "Add $YOUR_USERNAME to deployment"
