@@ -312,7 +312,7 @@ $ cd /path/to/gitops-workshop/$YOUR_USERNAME-sample-app-config
 $ sed -i 's/participant/$YOUR_USERNAME/g' sample-app-deployment.yaml
 ```
 
-The result is that the arg on line `25` no longer says `'Hello participant\!', but instead relects whatever
+The result is that the arg on line `25` no longer says `'Hello participant\!'`, but instead relects whatever
 `$YOUR_USERNAME` is. For example: `'Hello btomlins\!'`. If `$YOUR_USERNAME` is `btomlins`, then you should see the
 following completed file:
 
