@@ -347,7 +347,7 @@ In order for ArgoCD to act upon this change, we will need to commit our changes 
 can do so using the following commands:
 
 ```
-$ git add $YOUR_USERNAME-sample-app-config/sampe-app-deployment.yaml
+$ git add sample-app-deployment.yaml
 $ git commit -m "Add $YOUR_USERNAME to deployment"
 $ git push -u origin $YOUR_USERNAME
 ```
