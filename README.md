@@ -145,7 +145,7 @@ DEMO SAMPLE APP RECONCILIATION
 
 *IMPORTANT!* _You must first fork this repository, [https://github.com/darthlukan/gitops-workshop](https://github.com/darthlukan/gitops-workshop), to your GitHub account._
 
-> *NOTE:* Your username MUST be entered as all lowercase characters to create a valid OCP namespace.
+> *NOTE:* Your username MUST be entered as all lowercase characters to create a valid namespace.
 
 ```
 $ cd ansible
@@ -236,7 +236,28 @@ $ oc apply -f workshop-sample-app-cr.yaml
 $ oc apply -f workshop-sample-app-ci-cr.yaml
 ```
 
-TODO: Walkthrough of the console so users can see the results.
+Inside your cluster console, from the navigation pane you can select Networking -> Routes to view the available URLs for connection to your deployed ArgoCD instance.
 
+> *NOTE:* You will need to have the `argocd` project selected to view the relevant routes.
+
+![ArgoCD Routes](/docs/images/01&#32;-&#32;ArgoCD&#32;Route.png "ArgoCD Routes")
+
+Click on the URL in the Location column for the route named `workshop-argocd-server`. This will open the ArgoCD login page: 
+
+![ArgoCD Login Page](/docs/images/02&#32;-&#32;ArgoCD&#32;Login.png "ArgoCD Login Page")
+
+In order to login to the ArgoCD server, you will need to retrieve the admin password from the Argo CD deployed secret. Execute the following commands to retrieve the password:
+
+```
+$ oc project argocd
+$ export ARGOCD_CLUSTER_NAME=workshop
+$ oc get secret $ARGOCD_CLUSTER_NAME-argocd-cluster -o jsonpath='{.data.admin\.password}' | base64 -d
+```
+
+The returned string will be the password for the admin user login to Argo CD.
+
+You will see the Argo CD Applications dashboard, and you should see the pipelines we created for our `workshop` project:
+
+![ArgoCD Console](/docs/images/03&#32;-&#32;ArgoCD&#32;Console.png "ArgoCD Console")
 
 ### Making Changes
