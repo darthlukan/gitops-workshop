@@ -237,7 +237,8 @@ $ oc apply -f workshop-sample-app-ci-cr.yaml
 ```
 
 TODO: Walkthrough of the console so users can see the results.
-![alt text](docs/images/01 - ArgoCD Route.png "ArgoCD Route")
+
+![ArgoCD Route](/docs/images/01&#32;-&#32;ArgoCD&#32;Route.png)
 
 
 ### Making Changes
