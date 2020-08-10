@@ -354,6 +354,12 @@ $ git push -u origin $YOUR_USERNAME
 
 TODO: Screenshots of the result
 
+
+### Considerations for production implementations
+
+TBD
+
+
 ### Further Reading
 
 For those that wish to learn more about GitOps, and the tools that are currently available to implement GitOps workflows quickly and efficiently, check out the following resources:
