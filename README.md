@@ -145,7 +145,7 @@ DEMO SAMPLE APP RECONCILIATION
 
 *IMPORTANT!* _You must first fork this repository, [https://github.com/darthlukan/gitops-workshop](https://github.com/darthlukan/gitops-workshop), to your GitHub account._
 
-> *NOTE:* Your username MUST be entered as all lowercase characters to create a valid OCP namespace.
+> *NOTE:* Your username MUST be entered as all lowercase characters to create a valid namespace.
 
 ```
 $ cd ansible
@@ -236,7 +236,134 @@ $ oc apply -f workshop-sample-app-cr.yaml
 $ oc apply -f workshop-sample-app-ci-cr.yaml
 ```
 
-TODO: Walkthrough of the console so users can see the results.
+Inside your cluster console, from the navigation pane you can select Networking -> Routes to view the available URLs for connection to your deployed ArgoCD instance.
 
+> *NOTE:* You will need to have the `argocd` project selected to view the relevant routes.
+
+![ArgoCD Routes](/docs/images/01&#32;-&#32;ArgoCD&#32;Route.png "ArgoCD Routes")
+
+Click on the URL in the Location column for the route named `workshop-argocd-server`. This will open the ArgoCD login page: 
+
+![ArgoCD Login Page](/docs/images/02&#32;-&#32;ArgoCD&#32;Login.png "ArgoCD Login Page")
+
+In order to login to the ArgoCD server, you will need to retrieve the admin password from the Argo CD deployed secret. Execute the following commands to retrieve the password:
+
+```
+$ oc project argocd
+$ export ARGOCD_CLUSTER_NAME=workshop
+$ oc get secret $ARGOCD_CLUSTER_NAME-argocd-cluster -o jsonpath='{.data.admin\.password}' | base64 -d
+```
+
+The returned string will be the password for the admin user login to Argo CD.
+
+You will see the Argo CD Applications dashboard, and you should see the pipelines we created for our `workshop` project:
+
+![ArgoCD Console](/docs/images/03&#32;-&#32;ArgoCD&#32;Console.png "ArgoCD Console")
 
 ### Making Changes
+
+Now comes the fun part. We are going to make some changes to our files in git, commit and push them, and watch how ArgoCD
+automatically syncs those changes so that we don't have to manually log into the cluster and perform the deployment
+operation ourselves.
+
+> *NOTE:* Execute the following playbook to save time or if you encounter an error attempting to follow the steps in
+> this section:
+
+```
+$ cd /path/to/gitops-workshop/ansible
+$ ansible-playbook -i inventory participants-make-changes.yaml -e kubeconfig=/path/to/kubeconfig -e participant=$YOUR_USERNAME
+```
+
+First let's make a small change, adding a more personalized greeting to the `sample-app-deployment.yaml` manifest. The
+provided `sample-app-deployment.yaml` defaults to a very generic greeting, `'Hello participant\!'` as described by the
+file content below:
+
+```
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app
+  namespace: sample-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+    spec:
+      containers:
+        - name: sample-app
+          image: "quay.io/sscaling/gitops-workshop:v0.0.1"
+          command:
+            - '/usr/bin/greet'
+          args:
+            - 'Hello participant\!'
+...
+```
+
+To change this, you can use your text editor or execute the following commands:
+
+```
+$ cd /path/to/gitops-workshop/$YOUR_USERNAME-sample-app-config
+$ sed -i 's/participant/$YOUR_USERNAME/g' sample-app-deployment.yaml
+```
+
+The result is that the arg on line `25` no longer says `'Hello participant\!'`, but instead reflects whatever
+`$YOUR_USERNAME` is. For example: `'Hello btomlins\!'`. If `$YOUR_USERNAME` is `btomlins`, then you should see the
+following completed file:
+
+```
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app
+  namespace: sample-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+    spec:
+      containers:
+        - name: sample-app
+          image: "quay.io/sscaling/gitops-workshop:v0.0.1"
+          command:
+            - '/usr/bin/greet'
+          args:
+            - 'Hello btomlins\!'
+...
+```
+
+In order for ArgoCD to act upon this change, we will need to commit our changes and push them to our remote repo. You
+can do so using the following commands:
+
+```
+$ git add sample-app-deployment.yaml
+$ git commit -m "Add $YOUR_USERNAME to deployment"
+$ git push -u origin $YOUR_USERNAME
+```
+
+TODO: Screenshots of the result
+
+### Further Reading
+
+For those that wish to learn more about GitOps, and the tools that are currently available to implement GitOps workflows quickly and efficiently, check out the following resources:
+
+- [ArgoCD - GitOps continuous delivery tool for Kubernetes](https://argoproj.github.io/argo-cd/ "ArgoCD Overview")
+
+- [Tekton - Continuous integration and delivery solution for Kubernetes](https://tekton.dev/docs/ "Tekton Docs")
+
+- [OpenShift Pipelines - OCP specific Tekton integration](https://www.openshift.com/learn/topics/pipelines "OpenShift Pipelines Overview")
+
+- [Introduction to GitOps with OpenShift](https://www.openshift.com/blog/introduction-to-gitops-with-openshift "GitOps with OpenShift")
+
+- [GitOps Overview - High level explanation of GitOps Philosophy](https://www.gitops.tech/ "GitOps")
