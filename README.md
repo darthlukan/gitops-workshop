@@ -354,9 +354,51 @@ $ git push -u origin $YOUR_USERNAME
 
 TODO: Screenshots of the result
 
+
+### Considerations for production implementations
+
+This section includes some best practices to note when considering the use of GitOps and/or related tools through production. As
+the focus of the workshop is on concepts and techniques, any mention of specific tools is meant to be illustrative and
+not prescriptive.
+
+#### Security
+
+- Follow the ["Principle of Least Privilege"](https://en.wikipedia.org/wiki/Principle_of_least_privilege). Do not grant
+  broad access unless broad access is actually warranted. A best practice is to have engineers document the roles and
+  permissions required for their workloads based on the functionality those roles and permissions provide.
+- Operations should be audited. GitOps by nature provides traceability (who did what and when) but someone or some thing
+  should periodically review traced actions to ensure correctness.
+- All tools should be vetted by your security team(s) and tools prior to being used in production.
+- Use SSO to set up users and roles, and then remove the `admin` account. ArgoCD and other GitOps tools have [SSO functionality](https://argoproj.github.io/argo-cd/operator-manual/user-management/#sso)
+  that should be used instead of "local users".
+- Plan for and make use of Secrets Management before implementing GitOps or choosing your tools. Examples of tools known
+  to work well in a GitOps setting are [HashiCorp Vault](https://www.vaultproject.io/), [Helm Secrets](https://github.com/zendesk/helm-secrets), and
+  [Ansible Vault](https://docs.ansible.com/ansible/latest/user_guide/vault.html).
+
+#### Configuration
+
+- Separate application configuration from application source code. Practically, this means your application manifests
+  "live" in their own repository (e.g. `sample-app-config`) and your application sources (e.g. `sample-app`) are also
+  stored in their own repository.
+- The application configuration repo(s) should be owned by the same team writing the application, not an external team
+  who can be a bottleneck to deployment.
+- Test your configuration changes before committing them.
+- Configuration should not change due to external changes. For example, pin your modules to versions so that you don't
+  introduce drift. This also makes it easier to control version changes with Continuous Integration tools.
+
+#### Execution
+
+- Document the steps necessary to deploy manually. With GitOps, these are primarily `git` tasks along with corresponding
+  automation tools such as `ansible`, `oc`, and `kubectl`. Ensure the team understands these steps before
+  introducing further automation via tools such as [ArgoCD](https://argoproj.github.io/) or [FluxCD](https://toolkit.fluxcd.io/).
+- Once the manual steps are well understood, documented, and automation tools implemented, automate as much as possible. This limits
+  errors caused by typos or distractions common during manual execution of tasks.
+
+
 ### Further Reading
 
-For those that wish to learn more about GitOps, and the tools that are currently available to implement GitOps workflows quickly and efficiently, check out the following resources:
+For those that wish to learn more about GitOps, and the tools that are currently available to implement GitOps workflows 
+quickly and efficiently, check out the following resources:
 
 - [ArgoCD - GitOps continuous delivery tool for Kubernetes](https://argoproj.github.io/argo-cd/ "ArgoCD Overview")
 
@@ -367,3 +409,7 @@ For those that wish to learn more about GitOps, and the tools that are currently
 - [Introduction to GitOps with OpenShift](https://www.openshift.com/blog/introduction-to-gitops-with-openshift "GitOps with OpenShift")
 
 - [GitOps Overview - High level explanation of GitOps Philosophy](https://www.gitops.tech/ "GitOps")
+
+- [5 GitOps Best Practices](https://blog.argoproj.io/5-gitops-best-practices-d95cb0cbe9ff)
+
+- [Understanding GitOps with Advanced Cluster Management](https://www.openshift.com/blog/understanding-gitops-with-red-hat-advanced-cluster-management)
