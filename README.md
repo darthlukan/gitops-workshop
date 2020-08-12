@@ -202,8 +202,9 @@ $ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' workshop-sample-app-ci-cr.ya
 Create a branch that is named `$YOUR_USERNAME` and push your first commit:
 
 ```
+$ cd /path/to/gitops-workshop
 $ git checkout -b $YOUR_USERNAME
-$ git add $YOUR_USERNAME-sample-app-config $YOUR_USERNAME-customresources
+$ git add $YOUR_USERNAME-sample-app-config $YOUR_USERNAME-customresources $YOUR_USERNAME-sample-app-ci
 $ git commit -m "environment set up"
 $ git push -u origin $YOUR_USERNAME
 ```
@@ -347,12 +348,17 @@ In order for ArgoCD to act upon this change, we will need to commit our changes 
 can do so using the following commands:
 
 ```
+$ cd /path/to/gitops-workshop/$YOUR_USERNAME-sample-app-config
 $ git add sample-app-deployment.yaml
 $ git commit -m "Add $YOUR_USERNAME to deployment"
 $ git push -u origin $YOUR_USERNAME
 ```
 
 TODO: Screenshots of the result
+
+### What Just Happened?
+
+
 
 ### Further Reading
 
