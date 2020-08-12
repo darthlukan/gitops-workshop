@@ -2,7 +2,6 @@ apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
   name: gitops-workshop-pipeline-run-argocd
-  namespace: gitops-workshop
 spec:
   pipelineRef:
     name: build-increment-commit
