@@ -358,7 +358,7 @@ TODO: Screenshots of the result
 
 ### What Just Happened?
 
-<TODO>
+TODO
 
 ### Considerations for production implementations
 

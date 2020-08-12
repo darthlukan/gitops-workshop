@@ -42,6 +42,12 @@
         state: "{{ state }}"
         path: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci"
       when: state != 'present'
+      
+    - name: Replace namespace in {{ participant }}-sample-app-ci
+      replace:
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/01-sample-app-ci-namespace.yaml"
+        regexp: 'sample-app-ci'
+        replace: "{{ participant }}-sample-app-ci"
 
     - name: "{{ 'Create' if state == 'present' else 'Remove' }} {{ participant }} dirs"
       file:
