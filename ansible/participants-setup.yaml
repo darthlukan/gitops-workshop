@@ -76,15 +76,15 @@
         - workshop-sample-app-cr
       when: state == 'present'
       
-    - name: Copy github secret to {{ participant }}-github-secret
+    - name: Copy secrets playbook to {{ participant }}-secrets.yaml
       copy:
-        src: "{{ playbook_dir }}/vars/github-secret.yaml"
-        dest: "{{ playbook_dir }}/vars/{{ participant }}-github-secret.yaml"
+        src: "{{ playbook_dir }}/secrets.yaml"
+        dest: "{{ playbook_dir }}/{{ participant }}-secrets.yaml"
       when: state == 'present'
       
-    - name: Update github-secret for participant namespace
+    - name: Update {{ participant }}-secrets.yaml for participant namespace
       replace:
-        dest: "{{ playbook_dir }}/vars/{{ participant }}-github-secret.yaml"
+        dest: "{{ playbook_dir }}/{{ participant }}-secrets.yaml"
         regexp: 'sample-app-ci'
         replace: "{{ participant }}-sample-app-ci"
 ...
