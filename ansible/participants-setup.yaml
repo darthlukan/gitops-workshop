@@ -75,16 +75,4 @@
         - workshop-sample-app-ci-cr
         - workshop-sample-app-cr
       when: state == 'present'
-      
-    - name: Copy secrets playbook to {{ participant }}-secrets.yaml
-      copy:
-        src: "{{ playbook_dir }}/secrets.yaml"
-        dest: "{{ playbook_dir }}/{{ participant }}-secrets.yaml"
-      when: state == 'present'
-      
-    - name: Update {{ participant }}-secrets.yaml for participant namespace
-      replace:
-        dest: "{{ playbook_dir }}/{{ participant }}-secrets.yaml"
-        regexp: 'sample-app-ci'
-        replace: "{{ participant }}-sample-app-ci"
 ...
