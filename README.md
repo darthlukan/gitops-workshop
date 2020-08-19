@@ -31,6 +31,27 @@ work well enough for small audiences.
 - [Code Ready Containers 1.13+](https://access.redhat.com/documentation/en-us/red_hat_codeready_containers/1.13/html/getting_started_guide/index)
 - [Minishift 1.34+](https://www.okd.io/minishift/)
 
+## Facilitator Usage
+
+Facilitators of this workshop can automatically provision the requisite components using the supplied playbooks. You
+must have `cluster-admin` or an administrative role that allows creation and modification of `CustomResourceDefinitions`
+and `InstallPlans` at the cluster scope in order to install the operator components used herein.
+
+### Setup the facilitator's local host
+
+The following commands will:
+- Install CLI pre-requisite tools (`oc`, `kubectl`, `argocd`)
+- Install the ArgoCD Operator
+- Instantiate/Deploy the `sample-app`, `sample-app-ci`, and `sample-infra` operands
+
+```
+$ cd /path/to/gitops-workshop/ansible
+$ ansible-playbook -i inventory playbook.yaml \
+  -e kubeconfig=/path/to/kubeconfig \
+  -e scope=cluster||namespace \
+  -e internal_registry=$REGISTRY_NAME \ # Omit this unless using a registry such as Artifactory or Nexus to limit image access
+  -e state=present||absent
+```
 
 ## Agenda
 

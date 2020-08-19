@@ -35,18 +35,21 @@
       copy:
         src: "{{ playbook_dir }}/../sample-app-ci/"
         dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci"
+        mode: preserve
       when: state == 'present'
 
     - name: Remove {{ participant }}-sample-app-ci
       file:
         state: "{{ state }}"
         path: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci"
+        mode: preserve
       when: state != 'present'
 
     - name: "{{ 'Create' if state == 'present' else 'Remove' }} {{ participant }} dirs"
       file:
         state: "{{ 'directory' if state == 'present' else 'absent' }}"
         path: "{{ playbook_dir }}/../{{ participant }}-{{ item }}"
+        mode: preserve
       loop:
         - sample-app-config
         - customresources
@@ -55,6 +58,7 @@
       template:
         src: "{{ playbook_dir }}/templates/sample-app-config/{{ item }}.yaml.j2"
         dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-config/{{ item }}.yaml"
+        mode: preserve
       loop:
         - sample-app-deployment
         - sample-app-namespace
@@ -65,6 +69,7 @@
       template:
         src: "{{ playbook_dir }}/templates/files/{{ item }}.yaml.j2"
         dest: "{{ playbook_dir }}/../{{ participant }}-customresources/{{ item }}.yaml"
+        mode: preserve
       loop:
         - workshop-sample-app-ci-cr
         - workshop-sample-app-cr
