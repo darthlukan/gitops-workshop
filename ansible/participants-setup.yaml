@@ -80,6 +80,7 @@
       copy:
         src: "{{ playbook_dir }}/secrets.yaml"
         dest: "{{ playbook_dir }}/{{ participant }}-secrets.yaml"
+        mode: preserve
       when: state == 'present'
 
     - name: Replace namespace in {{ participant }}-secrets
