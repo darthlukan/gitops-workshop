@@ -18,12 +18,5 @@ spec:
       args:
         - "-i"
         - 's@image:.*@image: "$(params.image-name):$(params.image-version)"@'
-        - "$(params.app-config-filename)"        
-    - name: update-last-modified
-      image: registry.redhat.io/rhel8/go-toolset
-      workingDir: $(workspaces.src.path)/$(params.app-config-path)
-      command: ["/usr/bin/sed"]
-      args:
-        - "-i"
-        - "s@lastModified:.*@lastModified: $(date '+%Y-%m-%d %H:%M:%S')@"
         - "$(params.app-config-filename)"
+
