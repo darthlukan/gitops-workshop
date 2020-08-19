@@ -5,13 +5,9 @@ metadata:
   name: workshop-argocd
 spec:
   grafana:
-    enabled: true
-    route:
-      enabled: true
+    enabled: false
   prometheus:
-    enabled: true
-    route:
-      enabled: true
+    enabled: false 
   server:
     route:
       enabled: true
