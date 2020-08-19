@@ -38,7 +38,7 @@
 
       - name: Populate workshop-argo-cluster-cr.yaml
         template:
-          src: "{{ playbook_dir }}/templates/files/workshop-argo-cluster-cr.yaml"
+          src: "{{ playbook_dir }}/templates/files/workshop-argo-cluster-cr.yaml.j2"
           dest: "{{ playbook_dir }}/files/workshop-argo-cluster-cr.yaml"
           force: true
     when: internal_registry is defined and internal_registry != "" 
@@ -56,4 +56,11 @@
       - workshop-sample-infra-cr.yaml
       - workshop-sample-app-ci-cr.yaml
     when: state == 'present'
+
+  - name: Cleanup
+    block:
+      - name: temp/argo-cd is absent 
+        file:
+          path: "{{ playbook_dir }}/temp/argo-cd"
+          state: "absent"
 ...
