@@ -23,18 +23,35 @@
           dest: "{{ playbook_dir }}/temp/argo-cd"
           version: "{{ argocd_release.tag }}"
 
-      - name: Set Redis deployment manifest fact
+      - name: Set deployment manifest facts
         set_fact:
           redis_deployment_json: "{{ lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/redis/argocd-redis-deployment.yaml') | from_yaml }}"
+          dex_deployment_json: ""
+          repo_deployment_json: ""
+          app_controller_deployment_json: ""
+          server_deployment_json: ""
 
-      - name: Set redis image fact
+      - name: Set image facts
         set_fact:
           redis_image: "{{ redis_deployment_json.spec.template.spec.containers[0].image }}"
+          dex_image: ""
+          repo_image: ""
+          app_controller_image: ""
+          server_image: ""
 
-      - name: Set redis image version and image name facts
+
+      - name: Set image version and image name facts
         set_fact:
           redis_image_version: "{{ redis_image.split(':')[-1] }}"
           redis_image_name: "{{ redis_image.split(':')[0] }}"
+          dex_image_version: ""
+          dex_image_name: ""
+          repo_image_version: ""
+          repo_image_name: ""
+          app_controller_image_version: ""
+          app_controller_image_name: ""
+          server_image_version: ""
+          server_image_name: ""
 
       - name: Populate workshop-argo-cluster-cr.yaml
         template:
