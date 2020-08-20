@@ -27,7 +27,7 @@
         set_fact:
           redis_deployment_json: "{{ lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/redis/argocd-redis-deployment.yaml') | from_yaml }}"
           dex_deployment_json: "{{ lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/dex/argocd-dex-server-deployment.yaml') | from_yaml }}"
-          server_deployment_json: "lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/server/argocd-server-deployment.yaml') | from_yaml }}"
+          server_deployment_json: "{{ lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/server/argocd-server-deployment.yaml') | from_yaml }}"
 
       - name: Set image facts
         set_fact:
