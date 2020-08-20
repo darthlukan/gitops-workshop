@@ -8,7 +8,7 @@ spec:
   project: workshop
   source:
     repoURL: https://github.com/darthlukan/gitops-workshop.git
-    targetRevision: content-what-happened
+    targetRevision: HEAD
     path: sample-app-ci
   destination:
     # Need to get this automagically via detection
