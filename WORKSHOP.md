@@ -341,7 +341,7 @@ Several things just happened "auto-magically" based on our ArgoCD configuration.
 1) ArgoCD detected a new commit to your git repository
     - `git fetch`
 2) ArgoCD pulled the change into our configured Application from the latest revision
-    - `git pull`
+    - `git merge`
 3) ArgoCD pushed the updated file to our OCP deployment
     - `oc apply -f sample-app-deployment.yaml`
 4) OCP spun up a new pod containing the updated Application file, and spun down the outdated deployed pod
