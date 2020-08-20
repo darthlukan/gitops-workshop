@@ -27,16 +27,12 @@
         set_fact:
           redis_deployment_json: "{{ lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/redis/argocd-redis-deployment.yaml') | from_yaml }}"
           dex_deployment_json: "{{ lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/dex/argocd-dex-server-deployment.yaml') | from_yaml }}"
-          repo_deployment_json: "{{ lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/repo-server/argocd-repo-server-deployment.yaml') | from_yaml }}"
-          app_controller_deployment_json: "{{ lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/application-controller/argocd-application-controller-deployment.yaml') | from_yaml }}"
           server_deployment_json: "lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/server/argocd-server-deployment.yaml') | from_yaml }}"
 
       - name: Set image facts
         set_fact:
           redis_image: "{{ redis_deployment_json.spec.template.spec.containers[0].image }}"
           dex_image: "{{ dex_deployment_json.spec.template.spec.containers[0].image }}"
-          repo_image: "{{ repo_deployment_json.spec.template.spec.containers[0].image }}"
-          app_controller_image: "{{ app_controller_deployment_json.spec.template.spec.containers[0].image }}"
           server_image: "{{ server_deployment_json.spec.template.spec.containers[0].image }}"
 
 
@@ -46,10 +42,6 @@
           redis_image_name: "{{ redis_image.split(':')[0] }}"
           dex_image_version: "{{ dex_image.split(':')[-1] }}"
           dex_image_name: "{{ dex_image.split(':')[0] }}"
-          repo_image_version: "{{ repo_image.split(':')[-1] }}"
-          repo_image_name: "{{ repo_image.split(':')[0] }}"
-          app_controller_image_version: "{{ app_controller_image.split(':')[-1] }}"
-          app_controller_image_name: "{{ app_controller_image.split(':')[0] }}"
           server_image_version: "{{ server_image.split(':')[-1] }}"
           server_image_name: "{{ server_image.split(':')[0] }}"
 
