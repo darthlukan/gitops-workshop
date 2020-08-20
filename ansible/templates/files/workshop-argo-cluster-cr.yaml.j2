@@ -5,9 +5,12 @@ metadata:
   name: workshop-argocd
 spec:
   grafana:
-    enabled: false
+    enabled: false 
   prometheus:
     enabled: false 
+  redis:
+    image: {{ internal_registry }}/{{ redis_image_name }}
+    version: {{ redis_image_version }} 
   server:
     route:
       enabled: true

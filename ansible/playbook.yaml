@@ -8,6 +8,46 @@
   - import_role:
       name: darthlukan.argocd_install.install_argocd
 
+  - name: Apply {{ internal_registry }} to manifests
+    block:
+      - name: Get latest ArgoCD release
+        github_release:
+          user: argoproj
+          repo: argo-cd
+          action: latest_release
+        register: argocd_release
+
+      - name: Get ArgoCD sources
+        git:
+          repo: https://github.com/argoproj/argo-cd.git
+          dest: "{{ playbook_dir }}/temp/argo-cd"
+          version: "{{ argocd_release.tag }}"
+
+      - name: Set Redis deployment manifest fact
+        set_fact:
+          redis_deployment_json: "{{ lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/redis/argocd-redis-deployment.yaml') | from_yaml }}"
+
+      - name: Set redis image fact
+        set_fact:
+          redis_image: "{{ redis_deployment_json.spec.template.spec.containers[0].image }}"
+
+      - name: Set redis image version and image name facts
+        set_fact:
+          redis_image_version: "{{ redis_image.split(':')[-1] }}"
+          redis_image_name: "{{ redis_image.split(':')[0] }}"
+
+      - name: Populate workshop-argo-cluster-cr.yaml
+        template:
+          src: "{{ playbook_dir }}/templates/files/workshop-argo-cluster-cr.yaml.j2"
+          dest: "{{ playbook_dir }}/files/workshop-argo-cluster-cr.yaml"
+          mode: preserve
+          force: true
+      - name: temp/argo-cd is absent
+        file:
+          path: "{{ playbook_dir }}/temp/argo-cd"
+          state: "absent"
+    when: internal_registry is defined and internal_registry|length > 0
+
   - name: Create Pipelines Operator Subscription
     k8s:
       definition:
@@ -18,9 +58,9 @@
           namespace: openshift-operators
         spec:
           channel:  ocp-4.4
-          name: openshift-pipelines-operator-rh 
-          source: redhat-operators 
-          sourceNamespace: openshift-marketplace 
+          name: openshift-pipelines-operator-rh
+          source: redhat-operators
+          sourceNamespace: openshift-marketplace
 
   - name: Deploy workshop applications
     k8s:
