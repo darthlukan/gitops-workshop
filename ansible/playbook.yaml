@@ -35,7 +35,6 @@
           dex_image: "{{ dex_deployment_json.spec.template.spec.containers[0].image }}"
           server_image: "{{ server_deployment_json.spec.template.spec.containers[0].image }}"
 
-
       - name: Set image version and image name facts
         set_fact:
           redis_image_version: "{{ redis_image.split(':')[-1] }}"
