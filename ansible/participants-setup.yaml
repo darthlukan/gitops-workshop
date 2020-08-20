@@ -51,6 +51,18 @@
         regexp: 'sample-app-ci'
         replace: "{{ participant }}-sample-app-ci"
 
+    - name: Replace repo location in {{ participant }}-sample-app-ci
+      replace:
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml"
+        regexp: 'darthlukan'
+        replace: "{{ participant }}"
+
+    - name: Replace branch name in {{ participant }}-sample-app-ci
+      replace:
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml"
+        regexp: 'master'
+        replace: "{{ participant }}"
+
     - name: "{{ 'Create' if state == 'present' else 'Remove' }} {{ participant }} dirs"
       file:
         state: "{{ 'directory' if state == 'present' else 'absent' }}"

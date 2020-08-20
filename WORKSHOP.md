@@ -163,6 +163,8 @@ $ cd ../$YOUR_USERNAME-customresources
 $ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' workshop-sample-app-ci-cr.yaml workshop-sample-app-cr.yaml
 $ cd ../$YOUR_USERNAME-sample-app-ci
 $ sed -i 's/sample-app-ci/$YOUR_USERNAME-sample-app-ci/g' 01-sample-app-ci-namespace.yaml
+$ sed -i 's/darthlukan/$YOUR_USERNAME/g' 30-pipeline-run.yaml
+$ sed -i 's/master/$YOUR_USERNAME/g' 30-pipeline-run.yaml
 ```
 
 Finally, we need to copy and modify the file that will allow us to set up our github and pull secrets:

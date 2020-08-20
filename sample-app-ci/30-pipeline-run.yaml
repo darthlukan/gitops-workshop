@@ -11,9 +11,9 @@ spec:
         claimName: git-clone-output
   params:
     - name: repo-url
-      value: https://github.com/skylarscaling/gitops-workshop
+      value: https://github.com/darthlukan/gitops-workshop
     - name: git-branch
-      value: skylarscaling
+      value: master
     - name: image-name
       value: quay.io/sscaling/gitops-workshop
     - name: image-version
