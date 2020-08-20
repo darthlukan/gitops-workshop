@@ -4,10 +4,17 @@ kind: ArgoCD
 metadata:
   name: workshop-argocd
 spec:
+  # Image to use for all ArgoCD server components: server, application-controller, repo-server
+  # by default this is 'argoproj/argocd:latest'
+  image: {{ internal_registry }}/{{ server_image_name }}:{{ server_image_version }}
+
   grafana:
     enabled: false 
   prometheus:
     enabled: false 
+  dex:
+    image: {{ internal_registry }}/{{ dex_image_name }}
+    version: {{ dex_image_version }}
   redis:
     image: {{ internal_registry }}/{{ redis_image_name }}
     version: {{ redis_image_version }} 
