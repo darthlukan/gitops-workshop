@@ -44,17 +44,32 @@
           server_image_version: "{{ server_image.split(':')[-1] }}"
           server_image_name: "{{ server_image.split(':')[0] }}"
 
+      - name: Backup dir for original workshop-argo-cluster-cr manifest exists
+        file:
+          state: directory
+          recurse: true
+          path: "{{ playbook_dir }}/original"
+          mode: "ugo+rw"
+
+      - name: Backup workshop-argo-cluster-cr
+        copy:
+          state: present
+          mode: preserve
+          src: "{{ playbook_dir }}/files/workshop-argo-cluster-cr.yaml"
+          dest: "{{ playbook_dir }}/original/workshop-argo-cluster-cr.yaml"
+
       - name: Populate workshop-argo-cluster-cr.yaml
         template:
           src: "{{ playbook_dir }}/templates/files/workshop-argo-cluster-cr.yaml.j2"
           dest: "{{ playbook_dir }}/files/workshop-argo-cluster-cr.yaml"
           mode: preserve
           force: true
+
       - name: temp/argo-cd is absent
         file:
           path: "{{ playbook_dir }}/temp/argo-cd"
           state: "absent"
-    when: internal_registry is defined and internal_registry|length > 0
+    when: internal_registry is defined and internal_registry|length > 0 and state == 'present'
 
   - name: Deploy workshop applications
     k8s:
