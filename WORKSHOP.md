@@ -334,7 +334,18 @@ If you observe the ArgoCD Dashboard, you will see the $YOUR_USERNAME-sample-app 
 
 ## What Just Happened?
 
-TODO
+Several things just happened "auto-magically" based on our ArgoCD configuration.
+
+1) ArgoCD detected a new commit to your git repository
+2) ArgoCD pulled the change into our configured Application from the latest revision
+    - `git pull`
+3) ArgoCD pushed the updated file to our OCP deployment
+    - `oc apply -f sample-app-deployment.yaml`
+4) OCP spun up a new pod containing the updated Application file, and spun down the outdated deployed pod
+
+You can see the updated deployment in your OCP console by navigating to Workloads -> Deployments for your $YOUR_USERNAME-sample-app project:
+
+![Updated Deployment](/docs/images/06&#32;-&#32;Updated&#32;Deployment.png "Updated Deployment") 
 
 ## Considerations for production implementations
 
