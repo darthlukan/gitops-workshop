@@ -15,6 +15,6 @@ components:
     mountSources: true
     command: ['sleep', 'infinity']
     env:
-      name: HOME
-      value: /projects
+      - name: HOME
+        value: /projects
 ...
