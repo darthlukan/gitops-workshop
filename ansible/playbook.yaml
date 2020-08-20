@@ -23,18 +23,39 @@
           dest: "{{ playbook_dir }}/temp/argo-cd"
           version: "{{ argocd_release.tag }}"
 
-      - name: Set Redis deployment manifest fact
+      - name: Set deployment manifest facts
         set_fact:
           redis_deployment_json: "{{ lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/redis/argocd-redis-deployment.yaml') | from_yaml }}"
+          dex_deployment_json: "{{ lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/dex/argocd-dex-server-deployment.yaml') | from_yaml }}"
+          server_deployment_json: "{{ lookup('file', playbook_dir + '/temp/argo-cd/manifests/base/server/argocd-server-deployment.yaml') | from_yaml }}"
 
-      - name: Set redis image fact
+      - name: Set image facts
         set_fact:
           redis_image: "{{ redis_deployment_json.spec.template.spec.containers[0].image }}"
+          dex_image: "{{ dex_deployment_json.spec.template.spec.containers[0].image }}"
+          server_image: "{{ server_deployment_json.spec.template.spec.containers[0].image }}"
 
-      - name: Set redis image version and image name facts
+      - name: Set image version and image name facts
         set_fact:
           redis_image_version: "{{ redis_image.split(':')[-1] }}"
           redis_image_name: "{{ redis_image.split(':')[0] }}"
+          dex_image_version: "{{ dex_image.split(':')[-1] }}"
+          dex_image_name: "{{ dex_image.split(':')[0] }}"
+          server_image_version: "{{ server_image.split(':')[-1] }}"
+          server_image_name: "{{ server_image.split(':')[0] }}"
+
+      - name: Backup dir for original workshop-argo-cluster-cr manifest exists
+        file:
+          state: directory
+          recurse: true
+          path: "{{ playbook_dir }}/original"
+          mode: "ugo+rw"
+
+      - name: Backup workshop-argo-cluster-cr
+        copy:
+          mode: preserve
+          src: "{{ playbook_dir }}/files/workshop-argo-cluster-cr.yaml"
+          dest: "{{ playbook_dir }}/original/workshop-argo-cluster-cr.yaml"
 
       - name: Populate workshop-argo-cluster-cr.yaml
         template:
@@ -42,11 +63,12 @@
           dest: "{{ playbook_dir }}/files/workshop-argo-cluster-cr.yaml"
           mode: preserve
           force: true
+
       - name: temp/argo-cd is absent
         file:
           path: "{{ playbook_dir }}/temp/argo-cd"
           state: "absent"
-    when: internal_registry is defined and internal_registry|length > 0
+    when: internal_registry is defined and internal_registry|length > 0 and state == 'present'
 
   - name: Create Pipelines Operator Subscription
     k8s:
