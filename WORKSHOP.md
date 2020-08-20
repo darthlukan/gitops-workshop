@@ -161,6 +161,18 @@ $ cd $YOUR_USERNAME-sample-app-config
 $ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' sample-app-deployment.yaml sample-app-namespace.yaml sample-app-networkpolicy.yaml
 $ cd ../$YOUR_USERNAME-customresources
 $ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' workshop-sample-app-ci-cr.yaml workshop-sample-app-cr.yaml
+$ cd ../$YOUR_USERNAME-sample-app-ci
+$ sed -i 's/sample-app-ci/$YOUR_USERNAME-sample-app-ci/g' 01-sample-app-ci-namespace.yaml
+$ sed -i 's/darthlukan/$YOUR_USERNAME/g' 30-pipeline-run.yaml
+$ sed -i 's/master/$YOUR_USERNAME/g' 30-pipeline-run.yaml
+```
+
+Finally, we need to copy and modify the file that will allow us to set up our github and pull secrets:
+
+```
+$ cd /path/to/gitops-workshop/ansible
+$ cp secrets.yaml $YOUR_USERNAME-secrets.yaml
+$ sed -i 's/sample-app-ci/$YOUR_USERNAME-sample-app-ci/g' $YOUR_USERNAME-secrets.yaml
 ```
 
 *NOTE:* _The following is NOT completed by the playbook referenced at the top of this section and must be executed manually._
@@ -168,8 +180,9 @@ $ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' workshop-sample-app-ci-cr.ya
 Create a branch that is named `$YOUR_USERNAME` and push your first commit:
 
 ```
+$ cd /path/to/gitops-workshop
 $ git checkout -b $YOUR_USERNAME
-$ git add $YOUR_USERNAME-sample-app-config $YOUR_USERNAME-customresources
+$ git add .
 $ git commit -m "environment set up"
 $ git push -u origin $YOUR_USERNAME
 ```
@@ -313,13 +326,31 @@ In order for ArgoCD to act upon this change, we will need to commit our changes 
 can do so using the following commands:
 
 ```
+$ cd /path/to/gitops-workshop/$YOUR_USERNAME-sample-app-config
 $ git add sample-app-deployment.yaml
 $ git commit -m "Add $YOUR_USERNAME to deployment"
 $ git push -u origin $YOUR_USERNAME
 ```
 
-TODO: Screenshots of the result
+If you observe the ArgoCD Dashboard, you will see the $YOUR_USERNAME-sample-app Application recognize the change to the repository, sync the updated file, and apply the change to the deployment:
 
+![ArgoCD Sample App Update](/docs/images/05&#32;-&#32;Sample&#32;App&#32;Update.png "ArgoCD Sample App Update")
+
+## What Just Happened?
+
+Several things just happened "auto-magically" based on our ArgoCD configuration.
+
+1) ArgoCD detected a new commit to your git repository
+    - `git fetch`
+2) ArgoCD pulled the change into our configured Application from the latest revision
+    - `git merge`
+3) ArgoCD pushed the updated file to our OCP deployment
+    - `oc apply -f sample-app-deployment.yaml`
+4) OCP spun up a new pod containing the updated Application file, and spun down the outdated deployed pod
+
+You can see the updated deployment in your OCP console by navigating to Workloads -> Deployments for your $YOUR_USERNAME-sample-app project:
+
+![Updated Deployment](/docs/images/06&#32;-&#32;Updated&#32;Deployment.png "Updated Deployment") 
 
 ## Considerations for production implementations
 

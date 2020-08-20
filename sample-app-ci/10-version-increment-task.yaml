@@ -19,5 +19,4 @@ spec:
         - "-i"
         - 's@image:.*@image: "$(params.image-name):$(params.image-version)"@'
         - "$(params.app-config-filename)"
-        
-    
+

@@ -45,6 +45,27 @@
         mode: preserve
       when: state != 'present'
 
+    - name: Replace namespace in {{ participant }}-sample-app-ci
+      replace:
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/01-sample-app-ci-namespace.yaml"
+        regexp: 'sample-app-ci'
+        replace: "{{ participant }}-sample-app-ci"
+        mode: preserve
+
+    - name: Replace repo location in {{ participant }}-sample-app-ci
+      replace:
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml"
+        regexp: 'darthlukan'
+        replace: "{{ participant }}"
+        mode: preserve
+
+    - name: Replace branch name in {{ participant }}-sample-app-ci
+      replace:
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml"
+        regexp: 'master'
+        replace: "{{ participant }}"
+        mode: preserve
+
     - name: "{{ 'Create' if state == 'present' else 'Remove' }} {{ participant }} dirs"
       file:
         state: "{{ 'directory' if state == 'present' else 'absent' }}"
@@ -74,4 +95,18 @@
         - workshop-sample-app-ci-cr
         - workshop-sample-app-cr
       when: state == 'present'
+
+    - name: Copy secrets to {{ participant }}-secrets
+      copy:
+        src: "{{ playbook_dir }}/secrets.yaml"
+        dest: "{{ playbook_dir }}/{{ participant }}-secrets.yaml"
+        mode: preserve
+      when: state == 'present'
+
+    - name: Replace namespace in {{ participant }}-secrets
+      replace:
+        dest: "{{ playbook_dir }}/{{ participant }}-secrets.yaml"
+        regexp: 'sample-app-ci'
+        replace: "{{ participant }}-sample-app-ci"
+        mode: preserve
 ...

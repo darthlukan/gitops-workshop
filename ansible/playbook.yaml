@@ -48,6 +48,20 @@
           state: "absent"
     when: internal_registry is defined and internal_registry|length > 0
 
+  - name: Create Pipelines Operator Subscription
+    k8s:
+      definition:
+        apiVersion: operators.coreos.com/v1alpha1
+        kind: Subscription
+        metadata:
+          name: openshift-pipelines-operator
+          namespace: openshift-operators
+        spec:
+          channel:  ocp-4.4
+          name: openshift-pipelines-operator-rh
+          source: redhat-operators
+          sourceNamespace: openshift-marketplace
+
   - name: Deploy workshop applications
     k8s:
       namespace: argocd
