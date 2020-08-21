@@ -66,6 +66,13 @@
         replace: "{{ participant }}"
         mode: preserve
 
+    - name: Update app-config-path in {{ participant }}-sample-app-ci PipelineRun
+      replace:
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml"
+        regexp: 'sample-app-config'
+        replace: "{{ participant }}-sample-app-config"
+        mode: preserve
+
     - name: "{{ 'Create' if state == 'present' else 'Remove' }} {{ participant }} dirs"
       file:
         state: "{{ 'directory' if state == 'present' else 'absent' }}"
