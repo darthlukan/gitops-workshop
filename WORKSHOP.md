@@ -166,6 +166,7 @@ $ cd ../$YOUR_USERNAME-sample-app-ci
 $ sed -i 's/sample-app-ci/$YOUR_USERNAME-sample-app-ci/g' 01-sample-app-ci-namespace.yaml
 $ sed -i 's/darthlukan/$YOUR_USERNAME/g' 30-pipeline-run.yaml
 $ sed -i 's/master/$YOUR_USERNAME/g' 30-pipeline-run.yaml
+$ sed -i 's/sample-app-config/$YOUR_USERNAME-sample-app-config/g' 30-pipeline-run.yaml
 ```
 
 Finally, we need to copy and modify the file that will allow us to set up our github and pull secrets:
@@ -340,7 +341,7 @@ If you observe the ArgoCD Dashboard, you will see the $YOUR_USERNAME-sample-app 
 ## What Just Happened?
 
 Several things just happened "auto-magically" based on our ArgoCD configuration.
-
+__
 1) ArgoCD detected a new commit to your git repository
     - `git fetch`
 2) ArgoCD pulled the change into our configured Application from the latest revision
@@ -353,9 +354,16 @@ You can see the updated deployment in your OCP console by navigating to Workload
 
 ![Updated Deployment](/docs/images/06&#32;-&#32;Updated&#32;Deployment.png "Updated Deployment") 
 
+![Updated Pod](/docs/images/07&#32;-&#32;Updated&#32;Pod.png "Updated Pod")
+
 ## Running the Tekton Pipeline
 
 Throughout this workshop, 
+
+1) Update secrets
+2) Make change to pipeline run
+3) Commit change
+4) ... MAGIC ...
 
 ## Considerations for production implementations
 

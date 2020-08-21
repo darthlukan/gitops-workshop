@@ -50,28 +50,28 @@
         dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/01-sample-app-ci-namespace.yaml"
         regexp: 'sample-app-ci'
         replace: "{{ participant }}-sample-app-ci"
-        mode: '664'
+        mode: 'ugo+rw,o-w'
 
     - name: Replace repo location in {{ participant }}-sample-app-ci
       replace:
         dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml"
         regexp: 'darthlukan'
         replace: "{{ participant }}"
-        mode: '664'
+        mode: 'ugo+rw,o-w'
 
     - name: Replace branch name in {{ participant }}-sample-app-ci
       replace:
         dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml"
         regexp: 'master'
         replace: "{{ participant }}"
-        mode: '664'
+        mode: 'ugo+rw,o-w'
 
     - name: Update app-config-path in {{ participant }}-sample-app-ci PipelineRun
       replace:
         dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml"
         regexp: 'sample-app-config'
         replace: "{{ participant }}-sample-app-config"
-        mode: '664'
+        mode: 'ugo+rw,o-w'
 
     - name: "{{ 'Create' if state == 'present' else 'Remove' }} {{ participant }} dirs"
       file:
@@ -115,5 +115,5 @@
         dest: "{{ playbook_dir }}/{{ participant }}-secrets.yaml"
         regexp: 'sample-app-ci'
         replace: "{{ participant }}-sample-app-ci"
-        mode: '664'
+        mode: 'ugo+rw,o-w'
 ...
