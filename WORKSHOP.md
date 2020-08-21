@@ -341,7 +341,7 @@ If you observe the ArgoCD Dashboard, you will see the $YOUR_USERNAME-sample-app 
 ## What Just Happened?
 
 Several things just happened "auto-magically" based on our ArgoCD configuration.
-__
+
 1) ArgoCD detected a new commit to your git repository
     - `git fetch`
 2) ArgoCD pulled the change into our configured Application from the latest revision
