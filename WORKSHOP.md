@@ -11,6 +11,7 @@
 - Initial Deployment
 - Making Changes
 - What Just Happened?
+- Running the Tekton Pipeline
 - Sample Infrastructure Demo
 - Considerations for production implementations
 - Further reading
@@ -351,6 +352,10 @@ Several things just happened "auto-magically" based on our ArgoCD configuration.
 You can see the updated deployment in your OCP console by navigating to Workloads -> Deployments for your $YOUR_USERNAME-sample-app project:
 
 ![Updated Deployment](/docs/images/06&#32;-&#32;Updated&#32;Deployment.png "Updated Deployment") 
+
+## Running the Tekton Pipeline
+
+Throughout this workshop, 
 
 ## Considerations for production implementations
 
