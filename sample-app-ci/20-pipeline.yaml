@@ -87,6 +87,7 @@ spec:
         value: |
           git checkout $(params.git-branch)
           git status
+          git pull
           git add $(params.app-config-path)/$(params.app-config-filename)
           git commit --allow-empty -m "Pipeline execution and version update: $(params.image-name)/$(params.image-version)"
           git push
