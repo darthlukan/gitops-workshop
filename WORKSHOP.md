@@ -11,6 +11,7 @@
 - Initial Deployment
 - Making Changes
 - What Just Happened?
+- Running the Tekton Pipeline
 - Sample Infrastructure Demo
 - Considerations for production implementations
 - Further reading
@@ -34,8 +35,10 @@ section) to catch up.
 ## Accessing The Workshop
 
 The workshop can be accessed directly via GitHub [here](https://github.com/darthlukan/gitops-workshop). Feel free to
-fork the repo to your own GitHub account in order to follow along. To run the workshop, contact your facilitator for
-cluster access or provision your own local cluster using [Code Ready Containers](https://code-ready.github.io/crc/) or [Minishift](https://www.okd.io/minishift/) and then run the
+branch the repo in order to follow along (your usernames should have been added to the repository prior to this workshop). 
+
+To run the workshop, contact your facilitator for cluster access or provision your own local cluster using 
+[Code Ready Containers](https://code-ready.github.io/crc/) or [Minishift](https://www.okd.io/minishift/) and then run the
 `ansible/playbook.yaml` to configure the necessary workshop components.
 
 *Facilitator's Note*: Once you have a Kubernetes or OpenShift cluster provisioned, take note of the path to your
@@ -109,7 +112,7 @@ DEMO SAMPLE APP RECONCILIATION
 
 ## Prepare Your Environment
 
-*IMPORTANT!* _You must first fork this repository, [https://github.com/darthlukan/gitops-workshop](https://github.com/darthlukan/gitops-workshop), to your GitHub account._
+*IMPORTANT!* _You must first branch from this repository, [https://github.com/darthlukan/gitops-workshop](https://github.com/darthlukan/gitops-workshop), with your GitHub account._
 
 > *NOTE:* Your username MUST be entered as all lowercase characters to create a valid namespace.
 
@@ -163,8 +166,8 @@ $ cd ../$YOUR_USERNAME-customresources
 $ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' workshop-sample-app-ci-cr.yaml workshop-sample-app-cr.yaml
 $ cd ../$YOUR_USERNAME-sample-app-ci
 $ sed -i 's/sample-app-ci/$YOUR_USERNAME-sample-app-ci/g' 01-sample-app-ci-namespace.yaml
-$ sed -i 's/darthlukan/$YOUR_USERNAME/g' 30-pipeline-run.yaml
 $ sed -i 's/master/$YOUR_USERNAME/g' 30-pipeline-run.yaml
+$ sed -i 's/sample-app-config/$YOUR_USERNAME-sample-app-config/g' 30-pipeline-run.yaml
 ```
 
 Finally, we need to copy and modify the file that will allow us to set up our github and pull secrets:
@@ -187,8 +190,8 @@ $ git commit -m "environment set up"
 $ git push -u origin $YOUR_USERNAME
 ```
 
-That's it, your environment is now prepared for the rest of the workshop content. To recap, we've forked the workshop
-content to our own GitHub accounts, copied and personalized the files with which we'll be working, and established our
+That's it, your environment is now prepared for the rest of the workshop content. To recap, we've branched the workshop
+content, copied and personalized the files with which we'll be working, and established this as our
 "feature" branch.
 
 
@@ -351,6 +354,35 @@ Several things just happened "auto-magically" based on our ArgoCD configuration.
 You can see the updated deployment in your OCP console by navigating to Workloads -> Deployments for your $YOUR_USERNAME-sample-app project:
 
 ![Updated Deployment](/docs/images/06&#32;-&#32;Updated&#32;Deployment.png "Updated Deployment") 
+
+![Updated Pod](/docs/images/07&#32;-&#32;Updated&#32;Pod.png "Updated Pod")
+
+## Running the Tekton Pipeline
+
+Now we will demonstrate how the Tekton pipeline can be incorporated in the GitOps process to automate the creation of a new image version in our desired image repository.
+
+First, we need to patch our GitHub token and image pull secrets into the Tekton pipeline Service Account:
+
+```
+$ cd /path/to/gitops-workshop/ansible
+$ ansible-playbook -i inventory $YOUR_USERNAME-secrets.yaml --ask-vault-pass
+```
+
+Your workshop facilitator will provide you with the Ansible vault password you need to enter.
+
+Now we can make a change to our pipeline run CRD, which will trigger ArgoCD to update and start a new PipelineRun on our OCP cluster:
+
+```
+
+```
+2) Make change to pipeline run
+3) Commit change
+4) ... MAGIC ...
+    - ArgoCD detects change to repo and redeploys the sample application
+    - ArgoCD detects change to PipelineRun and updates the PipelineRun, triggering a new run* (TBD)
+    - The Tekton pipeline checks out our feature branch, builds a new image, and pushes it to our image repository
+    - Tekton commits a NEW change to our repository indicating the updated image has been created
+    - ArgoCD detects the change to the repository and redeploys the application from the new image
 
 ## Considerations for production implementations
 
