@@ -370,19 +370,65 @@ $ ansible-playbook -i inventory $YOUR_USERNAME-secrets.yaml --ask-vault-pass
 
 Your workshop facilitator will provide you with the Ansible vault password you need to enter.
 
-Now we can make a change to our pipeline run CRD, which will trigger ArgoCD to update and start a new PipelineRun on our OCP cluster:
+Now we can make a change to our pipeline run CRD, which will trigger ArgoCD to create a new PipelineRun on our OCP cluster. 
+For this change, we will update the version number for our image (`image-version` in `$YOUR_USERNAME-sample-app-ci/30-pipeline-run.yaml`):
 
 ```
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: gitops-workshop-pipeline-run-
+  annotations:
+    argocd.argoproj.io/hook: Sync
+spec:
+  pipelineRef:
+    name: build-increment-commit
+  workspaces:
+    - name: gitops-workshop-repo-source
+      persistentVolumeClaim:
+        claimName: git-clone-output
+  params:
+    - name: repo-url
+      value: https://github.com/darthlukan/gitops-workshop
+    - name: git-branch
+      value: master
+    - name: image-name
+      value: quay.io/sscaling/gitops-workshop
+    - name: image-version
+      value: v0.0.2
+    - name: app-path
+      value: sample-app
+    - name: app-config-path
+      value: sample-app-config
+    - name: app-config-filename
+      value: sample-app-deployment.yaml
+```
+
+Now we will commit this change to our git repo:
 
 ```
-2) Make change to pipeline run
-3) Commit change
-4) ... MAGIC ...
-    - ArgoCD detects change to repo and redeploys the sample application
-    - ArgoCD detects change to PipelineRun and updates the PipelineRun, triggering a new run* (TBD)
-    - The Tekton pipeline checks out our feature branch, builds a new image, and pushes it to our image repository
-    - Tekton commits a NEW change to our repository indicating the updated image has been created
-    - ArgoCD detects the change to the repository and redeploys the application from the new image
+$ cd /path/to/gitops-workshop
+$ git add .
+$ git commit -m "changed image version"
+$ git push
+```
+
+Since our PipelineRun uses a generated name, we will need to go into the ArgoCD dashboard and click `SYNC` on our `$YOUR_USERNAME-sample-app-ci` App. 
+
+![SYNC](/docs/images/08&#32;-&#32;SYNC.png "SYNC")
+
+The following actions will then be triggered automatically:
+
+- ArgoCD creates a new PipelineRun in OCP with a generated name following the pattern: `gitops-workshop-pipeline-run-<random-string>`
+
+![New PipelineRun](/docs/images/09&#32;-&#32;New&#32PipelineRun.png "New PipelineRun")
+
+- The Tekton pipeline checks out our feature branch, builds a new image, and pushes it to our image repository
+
+![PipelineRun Complete](/docs/images/10&#32;-&#32;PipelineRun&#32;Complete.png "PipelineRun Complete")
+
+- Tekton commits a NEW change to our repository indicating the updated image has been created (updates image name in `sample-app-deployment.yaml`)
+- ArgoCD detects the NEW change to the repository and redeploys the application from the new image
 
 ## Considerations for production implementations
 
