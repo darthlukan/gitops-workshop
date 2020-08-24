@@ -39,23 +39,6 @@ must have `cluster-admin` or an administrative role that allows creation and mod
 and `InstallPlans` at the cluster scope in order to install the operator components used herein.
 
 
-### Setup the facilitator's local host
-
-The following commands will:
-- Install CLI pre-requisite tools (`oc`, `kubectl`, `argocd`)
-- Install the ArgoCD Operator
-- Instantiate/Deploy the `sample-app`, `sample-app-ci`, and `sample-infra` operands
-
-```
-$ cd /path/to/gitops-workshop/ansible
-$ ansible-playbook -i inventory playbook.yaml \
-  -e kubeconfig=/path/to/kubeconfig \
-  -e scope=cluster||namespace \
-  -e internal_registry=$REGISTRY_NAME \ # Omit this unless using a registry such as Artifactory or Nexus to limit image access
-  -e state=present||absent
-```
-
-
 ### Using the Dockerfile
 
 This workshop comes with a `Dockerfile` defining an environment from which facilitators and participants may execute the
@@ -83,6 +66,23 @@ $ podman build -f Dockerfile -t $REGISTRY/gitops-workshop:$TAG
 ```
 
 From there, execute the steps defined in the previous section in order to use the image.
+
+
+### Setup the facilitator's local host
+
+The following commands will:
+- Install CLI pre-requisite tools (`oc`, `kubectl`, `argocd`)
+- Install the ArgoCD Operator
+- Instantiate/Deploy the `sample-app`, `sample-app-ci`, and `sample-infra` operands
+
+```
+$ cd /path/to/gitops-workshop/ansible
+$ ansible-playbook -i inventory playbook.yaml \
+  -e kubeconfig=/path/to/kubeconfig \
+  -e scope=cluster||namespace \
+  -e internal_registry=$REGISTRY_NAME \ # Omit this unless using a registry such as Artifactory or Nexus to limit image access
+  -e state=present||absent
+```
 
 
 ### Setup Code Ready Workspace
