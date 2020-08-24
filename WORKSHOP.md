@@ -1,7 +1,6 @@
 # Agenda
 
 - Overview
-- Accessing The Workshop
 - What is GitOps?
 - Why GitOps?
 - Sample Application Walkthrough
@@ -30,28 +29,6 @@ This workshop makes use of Ansible to install components and set up the workshop
 required to use the provided `partcipant-*.yaml` playbooks, they are merely provided to save time. If you find that
 following along is difficult or if you are pressed for time, run the associated playbook (will be noted in each relevant
 section) to catch up.
-
-
-## Accessing The Workshop
-
-The workshop can be accessed directly via GitHub [here](https://github.com/darthlukan/gitops-workshop). Feel free to
-branch the repo in order to follow along (your usernames should have been added to the repository prior to this workshop). 
-
-To run the workshop, contact your facilitator for cluster access or provision your own local cluster using 
-[Code Ready Containers](https://code-ready.github.io/crc/) or [Minishift](https://www.okd.io/minishift/) and then run the
-`ansible/playbook.yaml` to configure the necessary workshop components.
-
-*Facilitator's Note*: Once you have a Kubernetes or OpenShift cluster provisioned, take note of the path to your
-`kubeconfig` and execute the following:
-
-```
-$ cd ansible
-$ ansible-playbook -i inventory -c local playbook.yaml -e kubeconfig=/path/to/kubeconfig
-```
-
-> The above command will install the latest releases of the `oc`, `kubectl`, and `argocd` binaries to your `$HOME/bin`,
-> the ArgoCD operator at the cluster-scope, the Tekton operator at the cluster scope, provision an instance of ArgoCD,
-> deploy the `workshop` project in ArgoCD and the `sample-app` and `sample-infra` components within that project.
 
 
 ## What is GitOps?
@@ -127,24 +104,9 @@ $ ansible-playbook -i inventory participants-setup.yaml -e kubeconfig=/path/to/k
 Make sure you are logged into the cluster with a user that has `self-provisioner` set, then execute the following to
 create your namespace and set yourself as a namespace admin:
 
-OpenShift:
-
 ```
 $ oc new-project $YOUR_USERNAME-gitops
 ```
-
-For Kubernetes, you will need elevated permissions to create the namespace and then assign the `admin` cluster role.
-Kubernetes:
-
-```
-$ kubectl config set-context default/$CLUSTER/$YOUR_ADMIN_USERNAME --user=$YOUR_ADMIN_USERNAME/$CLUSTER --cluster=$CLUSTER --namespace=default
-$ kubectl create namespace $YOUR_USERNAME-gitops
-$ kubectl create rolebinding $YOUR_USERNAME-namespace-admin --clusterrole=admin --user=$YOUR_USERNAME -n $YOUR_USERNAME-gitops
-$ kubectl config set-context $YOUR_USERNAME-gitops/$CLUSTER/$YOUR_USERNAME --user=$YOUR_USERNAME/$CLUSTER --cluster=$CLUSTER --namespace=$YOUR_USERNAME-gitops
-```
-
-> *NOTE:* With `self-provisioner` permissions set in OpenShift, you do not need to create the `RoleBinding`, it is done
-> for you as part of the project request.
 
 Now we will create the directories to work from and copy over the files we'll be editing:
 
