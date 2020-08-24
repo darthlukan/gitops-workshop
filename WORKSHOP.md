@@ -104,24 +104,9 @@ $ ansible-playbook -i inventory participants-setup.yaml -e kubeconfig=/path/to/k
 Make sure you are logged into the cluster with a user that has `self-provisioner` set, then execute the following to
 create your namespace and set yourself as a namespace admin:
 
-OpenShift:
-
 ```
 $ oc new-project $YOUR_USERNAME-gitops
 ```
-
-For Kubernetes, you will need elevated permissions to create the namespace and then assign the `admin` cluster role.
-Kubernetes:
-
-```
-$ kubectl config set-context default/$CLUSTER/$YOUR_ADMIN_USERNAME --user=$YOUR_ADMIN_USERNAME/$CLUSTER --cluster=$CLUSTER --namespace=default
-$ kubectl create namespace $YOUR_USERNAME-gitops
-$ kubectl create rolebinding $YOUR_USERNAME-namespace-admin --clusterrole=admin --user=$YOUR_USERNAME -n $YOUR_USERNAME-gitops
-$ kubectl config set-context $YOUR_USERNAME-gitops/$CLUSTER/$YOUR_USERNAME --user=$YOUR_USERNAME/$CLUSTER --cluster=$CLUSTER --namespace=$YOUR_USERNAME-gitops
-```
-
-> *NOTE:* With `self-provisioner` permissions set in OpenShift, you do not need to create the `RoleBinding`, it is done
-> for you as part of the project request.
 
 Now we will create the directories to work from and copy over the files we'll be editing:
 
