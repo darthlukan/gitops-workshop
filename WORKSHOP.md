@@ -1,7 +1,6 @@
 # Agenda
 
 - Overview
-- Accessing The Workshop
 - What is GitOps?
 - Why GitOps?
 - Sample Application Walkthrough
