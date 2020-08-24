@@ -71,12 +71,14 @@ From there, execute the steps defined in the previous section in order to use th
 ### Setup the facilitator's local host
 
 The following commands will:
+- Install the requirements for the facilitator's `playbook.yaml`
 - Install CLI pre-requisite tools (`oc`, `kubectl`, `argocd`)
 - Install the ArgoCD Operator
 - Instantiate/Deploy the `sample-app`, `sample-app-ci`, and `sample-infra` operands
 
 ```
 $ cd /path/to/gitops-workshop/ansible
+$ ansible-galaxy collection install requirements.yaml
 $ ansible-playbook -i inventory playbook.yaml \
   -e kubeconfig=/path/to/kubeconfig \
   -e scope=cluster||namespace \
