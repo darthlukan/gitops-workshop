@@ -4,7 +4,7 @@
   tasks:
   - name: Create bin directory if necessary
     file:
-      path: "{{ playbook_dir }}/../bin"
+      path: "~/bin"
       state: directory
       mode: "u=rwx,g=rwx,o=rw"
 
