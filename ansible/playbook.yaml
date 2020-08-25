@@ -2,6 +2,12 @@
 - name: Setup Workshop
   hosts: local
   tasks:
+  - name: Create bin directory if necessary
+    file:
+      path: "{{ playbook_dir }}/../bin"
+      state: directory
+      mode: "u=rw,g=rw,o=r"
+
   - import_role:
       name: darthlukan.argocd_install.install_prereqs
 

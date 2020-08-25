@@ -78,7 +78,7 @@ The following commands will:
 
 ```
 $ cd /path/to/gitops-workshop/ansible
-$ ansible-galaxy collection install requirements.yaml
+$ ansible-galaxy collection install -r requirements.yaml
 $ ansible-playbook -i inventory playbook.yaml \
   -e kubeconfig=/path/to/kubeconfig \
   -e scope=cluster||namespace \
