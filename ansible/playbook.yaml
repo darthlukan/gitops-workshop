@@ -6,7 +6,7 @@
     file:
       path: "{{ playbook_dir }}/../bin"
       state: directory
-      mode: "u=rw,g=rw,o=r"
+      mode: "u=rwx,g=rwx,o=rw"
 
   - import_role:
       name: darthlukan.argocd_install.install_prereqs
