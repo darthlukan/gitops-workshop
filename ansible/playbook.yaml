@@ -26,19 +26,19 @@
           action: latest_release
         register: argocd_release
 
-      - name: Get ArgoCD sources
+      - name: Get latest ArgoCD sources
         git:
           repo: https://github.com/argoproj/argo-cd.git
           dest: "{{ playbook_dir }}/temp/argo-cd"
           version: "{{ argocd_release.tag }}"
-      when: argo_release_tag == "latest"
+        when: argo_release_tag == "latest"
 
-      - name: Get ArgoCD {{ argo_release_tag }} sources
+      - name: Get {{ argo_release_tag }} ArgoCD sources
         git:
           repo: https://github.com/argoproj/argo-cd.git
           dest: "{{ playbook_dir }}/temp/argo-cd"
           version: "{{ argo_release_tag }}"
-      when: argo_release_tag != "latest"
+        when: argo_release_tag != "latest"
 
       - name: Set deployment manifest facts
         set_fact:
