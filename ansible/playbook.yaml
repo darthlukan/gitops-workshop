@@ -2,7 +2,8 @@
 - name: Setup Workshop
   hosts: local
   vars:
-    argo_release_tag: "v1.7.1"
+    argo_release_tag: "latest"
+
   tasks:
   - name: Create bin directory if necessary
     file:
@@ -29,7 +30,15 @@
         git:
           repo: https://github.com/argoproj/argo-cd.git
           dest: "{{ playbook_dir }}/temp/argo-cd"
+          version: "{{ argocd_release.tag }}"
+      when: argo_release_tag == "latest"
+
+      - name: Get ArgoCD {{ argo_release_tag }} sources
+        git:
+          repo: https://github.com/argoproj/argo-cd.git
+          dest: "{{ playbook_dir }}/temp/argo-cd"
           version: "{{ argo_release_tag }}"
+      when: argo_release_tag != "latest"
 
       - name: Set deployment manifest facts
         set_fact:
