@@ -1,12 +1,24 @@
 ---
 - name: Setup Workshop
   hosts: local
+  vars:
+    argo_release_tag: "latest"
+    operator_release_tag: "latest"
+
   tasks:
+  - name: Create bin directory if necessary
+    file:
+      path: "~/bin"
+      state: directory
+      mode: "u=rwx,g=rwx,o=rw"
+
   - import_role:
       name: darthlukan.argocd_install.install_prereqs
 
   - import_role:
       name: darthlukan.argocd_install.install_argocd
+    vars:
+      operator_release_tag: "{{ operator_release_tag }}"
 
   - name: Apply {{ internal_registry }} to manifests
     block:
@@ -17,11 +29,19 @@
           action: latest_release
         register: argocd_release
 
-      - name: Get ArgoCD sources
+      - name: Get latest ArgoCD sources
         git:
           repo: https://github.com/argoproj/argo-cd.git
           dest: "{{ playbook_dir }}/temp/argo-cd"
           version: "{{ argocd_release.tag }}"
+        when: argo_release_tag == "latest"
+
+      - name: Get {{ argo_release_tag }} ArgoCD sources
+        git:
+          repo: https://github.com/argoproj/argo-cd.git
+          dest: "{{ playbook_dir }}/temp/argo-cd"
+          version: "{{ argo_release_tag }}"
+        when: argo_release_tag != "latest"
 
       - name: Set deployment manifest facts
         set_fact:
@@ -72,6 +92,7 @@
 
   - name: Create Pipelines Operator Subscription
     k8s:
+      kubeconfig: "{{ kubeconfig }}"
       definition:
         apiVersion: operators.coreos.com/v1alpha1
         kind: Subscription
