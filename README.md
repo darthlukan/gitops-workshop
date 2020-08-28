@@ -85,6 +85,7 @@ $ ansible-playbook -i inventory playbook.yaml \
   -e internal_registry=$REGISTRY_NAME \ # Omit this unless using a registry such as Artifactory or Nexus to limit image access
   -e state=present||absent
   -e argo_release_tag=v1.7.1
+  -e operator_release_tag=v0.0.13
 ```
 
 
