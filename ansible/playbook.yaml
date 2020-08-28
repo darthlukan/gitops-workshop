@@ -18,7 +18,7 @@
   - import_role:
       name: darthlukan.argocd_install.install_argocd
     vars:
-      operator_release_tag: {{ operator_release_tag }}
+      operator_release_tag: "{{ operator_release_tag }}"
 
   - name: Apply {{ internal_registry }} to manifests
     block:
