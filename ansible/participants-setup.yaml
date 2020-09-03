@@ -92,7 +92,6 @@
         dest: "{{ playbook_dir }}/../{{ participant }}-customresources/{{ item }}.yaml"
         mode: preserve
       loop:
-        - workshop-sample-app-ci-cr
         - workshop-sample-app-cr
       when: state == 'present'
 

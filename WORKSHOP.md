@@ -114,7 +114,6 @@ Now we will create the directories to work from and copy over the files we'll be
 $ cd /path/to/gitops-workshop
 $ cp -r sample-app-config $YOUR_USERNAME-sample-app-config
 $ mkdir $YOUR_USERNAME-customresources
-$ cp -r ansible/files/workshop-sample-app-ci-cr.yaml $YOUR_USERNAME-customresources
 $ cp -r ansible/files/workshop-sample-app-cr.yaml $YOUR_USERNAME-customresources
 ```
 
@@ -125,7 +124,7 @@ participants:
 $ cd $YOUR_USERNAME-sample-app-config
 $ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' sample-app-deployment.yaml sample-app-namespace.yaml sample-app-networkpolicy.yaml
 $ cd ../$YOUR_USERNAME-customresources
-$ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' workshop-sample-app-ci-cr.yaml workshop-sample-app-cr.yaml
+$ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' workshop-sample-app-cr.yaml
 $ cd ../$YOUR_USERNAME-sample-app-ci
 $ sed -i 's/sample-app-ci/$YOUR_USERNAME-sample-app-ci/g' 01-sample-app-ci-namespace.yaml
 $ sed -i 's/master/$YOUR_USERNAME/g' 30-pipeline-run.yaml
@@ -177,7 +176,6 @@ or OpenShift):
 ```
 $ cd $YOUR_USERNAME-customresources
 $ oc apply -f workshop-sample-app-cr.yaml
-$ oc apply -f workshop-sample-app-ci-cr.yaml
 ```
 
 Inside your cluster console, from the navigation pane you can select Networking -> Routes to view the available URLs for connection to your deployed ArgoCD instance.

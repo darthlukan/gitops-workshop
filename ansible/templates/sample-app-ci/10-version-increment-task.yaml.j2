@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: version-increment-task
+spec:
+  params:
+    - name: image-name
+    - name: image-version
+    - name: app-config-path
+    - name: app-config-filename
+  workspaces:
+    - name: src
+  steps:
+    - name: increment-version
+      image: "{{ go_image }}"
+      workingDir: $(workspaces.src.path)/$(params.app-config-path)
+      command: ["/usr/bin/sed"]
+      args:
+        - "-i"
+        - 's@image:.*@image: "$(params.image-name):$(params.image-version)"@'
+        - "$(params.app-config-filename)"
+
