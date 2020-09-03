@@ -128,7 +128,7 @@
   - name: Populate Tekton task templates
     template:
       src: "{{ playbook_dir }}/templates/sample-app-ci/{{ item }}.j2"
-      dest: "{{ playbook_dir }}/sample-app-ci/{{ item }}.yaml"
+      dest: "{{ playbook_dir }}/../sample-app-ci/{{ item }}.yaml"
       mode: preserve
       force: true
     loop:
@@ -141,7 +141,7 @@
   - name: Deploy Tekton pipeline
     k8s:
       namespace: sample-app-ci
-      src: "{{ playbook_dir }}/sample-app-ci/{{ item }}"
+      src: "{{ playbook_dir }}/../sample-app-ci/{{ item }}"
       state: "{{ state }}"
       kubeconfig: "{{ kubeconfig }}"
     loop:
