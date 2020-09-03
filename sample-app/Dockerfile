@@ -1,4 +1,4 @@
-FROM cgregistry.capgroup.com/registry.redhat.io/rhel8/go-toolset
+FROM registry.redhat.io/rhel8/go-toolset
 
 USER nobody
 
