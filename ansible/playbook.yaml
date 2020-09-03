@@ -128,7 +128,7 @@
   - name: Populate Tekton task templates
     template:
       src: "{{ playbook_dir }}/templates/sample-app-ci/{{ item }}.j2"
-      dest: "{{ playbook_dir }}/../sample-app-ci/{{ item }}.yaml"
+      dest: "{{ playbook_dir }}/../sample-app-ci/{{ item }}"
       mode: preserve
       force: true
     loop:
@@ -153,7 +153,11 @@
       - 10-make-sample-app-task.yaml
       - 10-version-increment-task.yaml
       - 20-pipeline.yaml
-      - 30-pipeline-run.yaml
+
+  - name: Create PipelineRun
+    # k8s module doesn't currently support generateName: https://github.com/ansible-collections/community.kubernetes/issues/186
+    shell:
+      cmd: oc create -f "{{ playbook_dir }}/../sample-app-ci/30-pipeline-run.yaml" -n sample-app-ci
 
   - name: Deploy workshop applications
     k8s:
