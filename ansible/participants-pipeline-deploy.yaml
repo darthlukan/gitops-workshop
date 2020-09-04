@@ -87,9 +87,4 @@
         - 10-make-sample-app-task.yaml
         - 10-version-increment-task.yaml
         - 20-pipeline.yaml
-
-    - name: Create PipelineRun
-      # k8s module doesn't currently support generateName: https://github.com/ansible-collections/community.kubernetes/issues/186
-      shell:
-        cmd: oc create -f "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml" -n "{{ participant }}-sample-app-ci"
 ...
