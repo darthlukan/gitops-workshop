@@ -91,5 +91,5 @@
     - name: Create PipelineRun
       # k8s module doesn't currently support generateName: https://github.com/ansible-collections/community.kubernetes/issues/186
       shell:
-        cmd: oc create -f "{{ playbook_dir }}/../sample-app-ci/30-pipeline-run.yaml" -n sample-app-ci
+        cmd: oc create -f "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml" -n sample-app-ci
 ...
