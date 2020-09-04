@@ -88,6 +88,17 @@ $ ansible-playbook -i inventory playbook.yaml \
   -e operator_release_tag=v0.0.12
 ```
 
+Now we have to update the Tekton pipeline to have the proper GitHub and registry-pull Secrets:
+
+> *NOTE:* If facilitating this workshop yourself, you will need to create your own secrets in the `secrets.yaml` playbook.
+
+```
+$ ansible-playbook -i inventory secrets.yaml \
+  -e kubeconfig=/path/to/kubeconfig \
+  --ask-vault-pass
+```
+
+Enter your ansible-vault password when prompted, and the pipeline service account will be patched with the required Secrets.
 
 ### Setup Code Ready Workspace
 
