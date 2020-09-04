@@ -14,7 +14,7 @@
         git_cli_image: "{{ git_cli_image_version }}"
         buildah_image: "{{ buildah_image_version }}"
         go_image: "{{ go_image_version }}"
-      when: internal_registry == ""
+      when: internal_registry.length == 0
 
     - name: Set internal registry image locations
       set_fact:
@@ -22,7 +22,7 @@
         git_cli_image: "{{ internal_registry }}/{{ git_cli_image_version }}"
         buildah_image: "{{ internal_registry }}/{{ buildah_image_version }}"
         go_image: "{{ internal_registry }}/{{ go_image_version }}"
-      when: internal_registry != ""
+      when: internal_registry.length > 0
 
     - name: Copy sample-app-ci to {{ participant }}-sample-app-ci
       copy:

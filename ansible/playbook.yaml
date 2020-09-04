@@ -92,7 +92,7 @@
         file:
           path: "{{ playbook_dir }}/temp/argo-cd"
           state: "absent"
-    when: internal_registry != "" and state == 'present'
+    when: internal_registry.length > 0 and state == 'present'
 
   - name: Create Pipelines Operator Subscription
     k8s:
@@ -115,7 +115,7 @@
       git_cli_image: "{{ git_cli_image_version }}"
       buildah_image: "{{ buildah_image_version }}"
       go_image: "{{ go_image_version }}"
-    when: internal_registry == ""
+    when: internal_registry.length == 0
 
   - name: Set internal registry image locations
     set_fact:
@@ -123,7 +123,7 @@
       git_cli_image: "{{ internal_registry }}/{{ git_cli_image_version }}"
       buildah_image: "{{ internal_registry }}/{{ buildah_image_version }}"
       go_image: "{{ internal_registry }}/{{ go_image_version }}"
-    when: internal_registry != ""
+    when: internal_registry.length > 0
 
   - name: Populate Tekton task templates
     template:
@@ -154,8 +154,8 @@
       - 10-version-increment-task.yaml
       - 20-pipeline.yaml
 
+  # k8s module doesn't currently support generateName: https://github.com/ansible-collections/community.kubernetes/issues/186
   - name: Create PipelineRun
-    # k8s module doesn't currently support generateName: https://github.com/ansible-collections/community.kubernetes/issues/186
     shell:
       cmd: oc create -f "{{ playbook_dir }}/../sample-app-ci/30-pipeline-run.yaml" -n sample-app-ci
 
