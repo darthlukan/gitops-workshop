@@ -83,7 +83,7 @@
 
     - name: Deploy Tekton pipeline
       k8s:
-        namespace: sample-app-ci
+        namespace: "{{ participant }}-sample-app-ci"
         src: "{{ playbook_dir }}/../sample-app-ci/{{ item }}"
         state: "{{ state }}"
         kubeconfig: "{{ kubeconfig }}"
