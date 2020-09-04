@@ -95,7 +95,9 @@ DEMO SAMPLE APP RECONCILIATION
 
 ```
 $ cd ansible
-$ ansible-playbook -i inventory participants-setup.yaml -e kubeconfig=/path/to/kubeconfig -e participant="YOUR_USERNAME"
+$ ansible-playbook -i inventory participants-setup.yaml \
+  -e kubeconfig=/path/to/kubeconfig \
+  -e participant=$YOUR_USERNAME
 ```
 
 > *INSTRUCTION:* Execute the playbook referenced above during the workshop in the interest of time. The steps executed by the
@@ -112,9 +114,9 @@ Now we will create the directories to work from and copy over the files we'll be
 
 ```
 $ cd /path/to/gitops-workshop
+$ mkdir $YOUR_USERNAME-sample-app-config
 $ cp -r sample-app-config $YOUR_USERNAME-sample-app-config
 $ mkdir $YOUR_USERNAME-customresources
-$ cp -r ansible/files/workshop-sample-app-ci-cr.yaml $YOUR_USERNAME-customresources
 $ cp -r ansible/files/workshop-sample-app-cr.yaml $YOUR_USERNAME-customresources
 ```
 
@@ -125,11 +127,7 @@ participants:
 $ cd $YOUR_USERNAME-sample-app-config
 $ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' sample-app-deployment.yaml sample-app-namespace.yaml sample-app-networkpolicy.yaml
 $ cd ../$YOUR_USERNAME-customresources
-$ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' workshop-sample-app-ci-cr.yaml workshop-sample-app-cr.yaml
-$ cd ../$YOUR_USERNAME-sample-app-ci
-$ sed -i 's/sample-app-ci/$YOUR_USERNAME-sample-app-ci/g' 01-sample-app-ci-namespace.yaml
-$ sed -i 's/master/$YOUR_USERNAME/g' 30-pipeline-run.yaml
-$ sed -i 's/sample-app-config/$YOUR_USERNAME-sample-app-config/g' 30-pipeline-run.yaml
+$ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' workshop-sample-app-cr.yaml
 ```
 
 Finally, we need to copy and modify the file that will allow us to set up our github and pull secrets:
@@ -159,9 +157,9 @@ content, copied and personalized the files with which we'll be working, and esta
 
 ## Initial Deployment
 
-In this section we will tell ArgoCD to deploy our application and pipeline. We will be using `CustomResources`, which
+In this section we will tell ArgoCD to deploy our application. We will be using `CustomResources`, which
 are instances of a `CustomResourceDefinition`, to represent our deployments. In this case we will be using the
-`Application` "type" object to tell ArgoCD about our `sample-app` and `sample-app-ci` pipeline.
+`Application` "type" object to tell ArgoCD about our `sample-app` deployment.
 
 > *NOTE:* Execute the following playbook if you have difficulty following along or just wish to save time:
 
@@ -177,7 +175,6 @@ or OpenShift):
 ```
 $ cd $YOUR_USERNAME-customresources
 $ oc apply -f workshop-sample-app-cr.yaml
-$ oc apply -f workshop-sample-app-ci-cr.yaml
 ```
 
 Inside your cluster console, from the navigation pane you can select Networking -> Routes to view the available URLs for connection to your deployed ArgoCD instance.
@@ -321,19 +318,63 @@ You can see the updated deployment in your OCP console by navigating to Workload
 
 ## Running the Tekton Pipeline
 
-Now we will demonstrate how the Tekton pipeline can be incorporated in the GitOps process to automate the creation of a new image version in our desired image repository.
+Now we will demonstrate how a Tekton pipeline can be incorporated in the GitOps process to automate the creation of a new image version in our desired image registry.
 
-First, we need to patch our GitHub token and image pull secrets into the Tekton pipeline Service Account:
+First, we will deploy our Tekton pipeline. In order to save time, you should run the following playbook:
 
 ```
 $ cd /path/to/gitops-workshop/ansible
-$ ansible-playbook -i inventory $YOUR_USERNAME-secrets.yaml --ask-vault-pass
+$ ansible-playbook -i inventory participants-pipeline-deploy.yaml \
+  -e kubeconfig=/path/to/kubeconfig \
+  -e participant=$YOUR_USERNAME \
+  -e state=present \ # Use 'absent' to undeploy
+  -e internal_registry=$REGISTRY_NAME # Omit this unless using a registry such as Artifactory or Nexus to limit image access
 ```
 
-Your workshop facilitator will provide you with the Ansible vault password you need to enter.
+> *NOTE* - This playbook performs several tasks for the participant. The equivalent commands can been seen below:
 
-Now we can make a change to our pipeline run CRD, which will trigger ArgoCD to create a new PipelineRun on our OCP cluster. 
-For this change, we will update the version number for our image (`image-version` in `$YOUR_USERNAME-sample-app-ci/30-pipeline-run.yaml`):
+Copy the necessary CRD files for the Tekton pipeline and its component tasks:
+
+```
+$ cp -r sample-app-ci $YOUR_USERNAME-sample-app-ci
+```
+
+Replace the namespace, git branch, and config path with the participant's respective values:
+
+```
+$ cd ../$YOUR_USERNAME-sample-app-ci
+$ sed -i 's/sample-app-ci/$YOUR_USERNAME-sample-app-ci/g' 01-sample-app-ci-namespace.yaml
+$ sed -i 's/master/$YOUR_USERNAME/g' 30-pipeline-run.yaml
+$ sed -i 's/sample-app-config/$YOUR_USERNAME-sample-app-config/g' 30-pipeline-run.yaml
+```
+
+Deploy the pipeline and its component tasks from the CRDs:
+
+> *NOTE* - If you specified an `internal_registry` during deployment, the appropriate images used in the pipeline will be updated to the correct paths.
+
+```
+$ oc create -f 01-sample-app-ci-namespace.yaml
+$ oc create -f 02-sample-app-pvc.yaml
+$ oc create -f 10-buildah-task.yaml
+$ oc create -f 10-git-cli-task.yaml
+$ oc create -f 10-git-clone-task.yaml
+$ oc create -f 10-make-sample-app-task.yaml
+$ oc create -f 10-version-increment-task.yaml
+$ oc create -f 20-pipeline.yaml
+```
+
+> *NOTE* - The following steps are not executed by the playbook above and must be run by the participant:
+
+Finally, we need to patch our GitHub token and image pull secrets into the Tekton pipeline Service Account for our namespace:
+
+```
+$ ansible-playbook -i inventory $YOUR_USERNAME-secrets.yaml \
+  -e kubeconfig=/path/to/kubeconfig --ask-vault-pass
+```
+
+> *NOTE* - Your workshop facilitator will provide you with the Ansible vault password you need to enter.
+
+Now we can make a change to our pipeline run CRD. For this change, we will update the version number for our image (`image-version` in `$YOUR_USERNAME-sample-app-ci/30-pipeline-run.yaml`):
 
 ```
 apiVersion: tekton.dev/v1beta1
@@ -370,18 +411,26 @@ Now we will commit this change to our git repo:
 
 ```
 $ cd /path/to/gitops-workshop
+$ git pull
 $ git add .
 $ git commit -m "changed image version"
 $ git push
 ```
 
-Since our PipelineRun uses a generated name, we will need to go into the ArgoCD dashboard and click `SYNC` on our `$YOUR_USERNAME-sample-app-ci` App. 
+And our final step is to kick off a new `PipelineRun`, which will trigger a new image build and push that image to our desired image registry with the new version number we specified:
 
-![SYNC](/docs/images/08&#32;-&#32;SYNC.png "SYNC")
+```
+$ cd ../$YOUR_USERNAME-sample-app-ci
+$ oc create -f 30-pipeline-run.yaml -n $YOUR_USERNAME-sample-app-ci
+```
+
+After one PipelineRun has been created, you can also choose to trigger a new run from the OCP console by navigating to `Pipelines` -> `Pipeline Runs` -> `Rerun` (on the last `PipelineRun`):
+
+![Manual PipelineRun](/docs/images/11&#32;-&#32;Manual&#32PipelineRun.png "Manual PipelineRun")
 
 The following actions will then be triggered automatically:
 
-- ArgoCD creates a new PipelineRun in OCP with a generated name following the pattern: `gitops-workshop-pipeline-run-<random-string>`
+- A new PipelineRun is created in OCP with a generated name following the pattern: `gitops-workshop-pipeline-run-<random-string>`
 
 ![New PipelineRun](/docs/images/09&#32;-&#32;New&#32PipelineRun.png "New PipelineRun")
 
@@ -390,7 +439,8 @@ The following actions will then be triggered automatically:
 ![PipelineRun Complete](/docs/images/10&#32;-&#32;PipelineRun&#32;Complete.png "PipelineRun Complete")
 
 - Tekton commits a NEW change to our repository indicating the updated image has been created (updates image name in `sample-app-deployment.yaml`)
-- ArgoCD detects the NEW change to the repository and redeploys the application from the new image
+
+> *NOTE* - It would be possible at this point to configure an app in ArgoCD that would watch the sample-app repository and automatically deploy the updated image. That is beyond the current scope of this workshop.
 
 ## Considerations for production implementations
 

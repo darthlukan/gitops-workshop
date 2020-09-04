@@ -9,5 +9,4 @@
         state: "{{ state }}"
       loop:
         - workshop-sample-app-cr.yaml
-        - workshop-sample-app-ci-cr.yaml
 ...

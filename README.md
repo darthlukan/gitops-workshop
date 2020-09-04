@@ -81,13 +81,24 @@ $ cd /path/to/gitops-workshop/ansible
 $ ansible-galaxy collection install -r requirements.yaml
 $ ansible-playbook -i inventory playbook.yaml \
   -e kubeconfig=/path/to/kubeconfig \
-  -e scope=cluster||namespace \
+  -e scope=cluster \ # Alternatively, you can use 'namespace' 
   -e internal_registry=$REGISTRY_NAME \ # Omit this unless using a registry such as Artifactory or Nexus to limit image access
-  -e state=present||absent
-  -e argo_release_tag=v1.7.1
+  -e state=present \ # Use 'absent' to undeploy
+  -e argo_release_tag=v1.7.1 \
   -e operator_release_tag=v0.0.12
 ```
 
+Now we have to update the Tekton pipeline to have the proper GitHub and registry-pull Secrets:
+
+> *NOTE:* If facilitating this workshop yourself, you will need to create your own secrets in the `secrets.yaml` playbook.
+
+```
+$ ansible-playbook -i inventory secrets.yaml \
+  -e kubeconfig=/path/to/kubeconfig \
+  --ask-vault-pass
+```
+
+Enter your ansible-vault password when prompted, and the pipeline service account will be patched with the required Secrets.
 
 ### Setup Code Ready Workspace
 

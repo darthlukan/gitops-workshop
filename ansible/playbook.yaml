@@ -2,8 +2,13 @@
 - name: Setup Workshop
   hosts: local
   vars:
+    internal_registry: "false"
     argo_release_tag: "latest"
     operator_release_tag: "latest"
+    git_clone_image_version: "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.14.2"
+    git_cli_image_version: "docker.io/alpine/git:v2.26.2"
+    buildah_image_version: "quay.io/buildah/stable:v1.14.8"
+    go_image_version: "registry.redhat.io/rhel8/go-toolset:1.13.4"
 
   tasks:
   - name: Create bin directory if necessary
@@ -88,7 +93,7 @@
         file:
           path: "{{ playbook_dir }}/temp/argo-cd"
           state: "absent"
-    when: internal_registry is defined and internal_registry|length > 0 and state == 'present'
+    when: internal_registry != "false" and state == 'present'
 
   - name: Create Pipelines Operator Subscription
     k8s:
@@ -105,6 +110,56 @@
           source: redhat-operators
           sourceNamespace: openshift-marketplace
 
+  - name: Set external registry image locations
+    set_fact:
+      git_clone_image: "{{ git_clone_image_version }}"
+      git_cli_image: "{{ git_cli_image_version }}"
+      buildah_image: "{{ buildah_image_version }}"
+      go_image: "{{ go_image_version }}"
+    when: internal_registry == "false"
+
+  - name: Set internal registry image locations
+    set_fact:
+      git_clone_image: "{{ internal_registry }}/{{ git_clone_image_version }}"
+      git_cli_image: "{{ internal_registry }}/{{ git_cli_image_version }}"
+      buildah_image: "{{ internal_registry }}/{{ buildah_image_version }}"
+      go_image: "{{ internal_registry }}/{{ go_image_version }}"
+    when: internal_registry != "false"
+
+  - name: Populate Tekton task templates
+    template:
+      src: "{{ playbook_dir }}/templates/sample-app-ci/{{ item }}.j2"
+      dest: "{{ playbook_dir }}/../sample-app-ci/{{ item }}"
+      mode: preserve
+      force: true
+    loop:
+      - 10-buildah-task.yaml
+      - 10-git-cli-task.yaml
+      - 10-git-clone-task.yaml
+      - 10-make-sample-app-task.yaml
+      - 10-version-increment-task.yaml
+
+  - name: Deploy Tekton pipeline
+    k8s:
+      namespace: sample-app-ci
+      src: "{{ playbook_dir }}/../sample-app-ci/{{ item }}"
+      state: "{{ state }}"
+      kubeconfig: "{{ kubeconfig }}"
+    loop:
+      - 01-sample-app-ci-namespace.yaml
+      - 02-sample-app-pvc.yaml
+      - 10-buildah-task.yaml
+      - 10-git-cli-task.yaml
+      - 10-git-clone-task.yaml
+      - 10-make-sample-app-task.yaml
+      - 10-version-increment-task.yaml
+      - 20-pipeline.yaml
+
+  # k8s module doesn't currently support generateName: https://github.com/ansible-collections/community.kubernetes/issues/186
+  - name: Create PipelineRun # noqa 301 305
+    shell:
+      cmd: oc create -f "{{ playbook_dir }}/../sample-app-ci/30-pipeline-run.yaml" -n sample-app-ci
+
   - name: Deploy workshop applications
     k8s:
       namespace: argocd
@@ -116,6 +171,4 @@
       - workshop-argo-project-cr.yaml
       - workshop-sample-app-cr.yaml
       - workshop-sample-infra-cr.yaml
-      - workshop-sample-app-ci-cr.yaml
-    when: state == 'present'
 ...

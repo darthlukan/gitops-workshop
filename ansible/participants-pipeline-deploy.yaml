@@ -1,0 +1,91 @@
+---
+- name: Setup Participant Pipeline
+  hosts: local
+  vars:
+    internal_registry: "false"
+    git_clone_image_version: "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.14.2"
+    git_cli_image_version: "docker.io/alpine/git:v2.26.2"
+    buildah_image_version: "quay.io/buildah/stable:v1.14.8"
+    go_image_version: "registry.redhat.io/rhel8/go-toolset:1.13.4"
+
+  tasks:
+    - name: Set external registry image locations
+      set_fact:
+        git_clone_image: "{{ git_clone_image_version }}"
+        git_cli_image: "{{ git_cli_image_version }}"
+        buildah_image: "{{ buildah_image_version }}"
+        go_image: "{{ go_image_version }}"
+      when: internal_registry == "false"
+
+    - name: Set internal registry image locations
+      set_fact:
+        git_clone_image: "{{ internal_registry }}/{{ git_clone_image_version }}"
+        git_cli_image: "{{ internal_registry }}/{{ git_cli_image_version }}"
+        buildah_image: "{{ internal_registry }}/{{ buildah_image_version }}"
+        go_image: "{{ internal_registry }}/{{ go_image_version }}"
+      when: internal_registry != "false"
+
+    - name: Copy sample-app-ci to {{ participant }}-sample-app-ci
+      copy:
+        src: "{{ playbook_dir }}/../sample-app-ci/"
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci"
+        mode: preserve
+      when: state == 'present'
+
+    - name: Remove {{ participant }}-sample-app-ci
+      file:
+        state: "{{ state }}"
+        path: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci"
+        mode: preserve
+      when: state != 'present'
+
+    - name: Replace namespace in {{ participant }}-sample-app-ci
+      replace:
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/01-sample-app-ci-namespace.yaml"
+        regexp: 'sample-app-ci'
+        replace: "{{ participant }}-sample-app-ci"
+        mode: 'ugo+rw,o-w'
+
+    - name: Replace branch name in {{ participant }}-sample-app-ci
+      replace:
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml"
+        regexp: 'master'
+        replace: "{{ participant }}"
+        mode: 'ugo+rw,o-w'
+
+    - name: Update app-config-path in {{ participant }}-sample-app-ci PipelineRun
+      replace:
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml"
+        regexp: 'sample-app-config'
+        replace: "{{ participant }}-sample-app-config"
+        mode: 'ugo+rw,o-w'
+
+    - name: Populate Tekton task templates
+      template:
+        src: "{{ playbook_dir }}/templates/sample-app-ci/{{ item }}.j2"
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/{{ item }}"
+        mode: preserve
+        force: true
+      loop:
+        - 10-buildah-task.yaml
+        - 10-git-cli-task.yaml
+        - 10-git-clone-task.yaml
+        - 10-make-sample-app-task.yaml
+        - 10-version-increment-task.yaml
+
+    - name: Deploy Tekton pipeline
+      k8s:
+        namespace: "{{ participant }}-sample-app-ci"
+        src: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/{{ item }}"
+        state: "{{ state }}"
+        kubeconfig: "{{ kubeconfig }}"
+      loop:
+        - 01-sample-app-ci-namespace.yaml
+        - 02-sample-app-pvc.yaml
+        - 10-buildah-task.yaml
+        - 10-git-cli-task.yaml
+        - 10-git-clone-task.yaml
+        - 10-make-sample-app-task.yaml
+        - 10-version-increment-task.yaml
+        - 20-pipeline.yaml
+...
