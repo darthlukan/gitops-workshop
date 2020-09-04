@@ -426,9 +426,7 @@ $ oc create -f 30-pipeline-run.yaml -n $YOUR_USERNAME-sample-app-ci
 
 After one PipelineRun has been created, you can also choose to trigger a new run from the OCP console by navigating to `Pipelines` -> `Pipeline Runs` -> `Rerun` (on the last `PipelineRun`):
 
-//TODO Screenshot
-
-![SYNC](/docs/images/08&#32;-&#32;SYNC.png "SYNC")
+![Manual PipelineRun](/docs/images/11&#32;-&#32;Manual&#32PipelineRun.png "Manual PipelineRun")
 
 The following actions will then be triggered automatically:
 
