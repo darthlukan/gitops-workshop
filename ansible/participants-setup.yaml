@@ -31,6 +31,15 @@
               name: "{{ participant }}"
               namespace: "{{ participant_namespace }}"
 
+    - name: "{{ 'Create' if state == 'present' else 'Remove' }} {{ participant }} dirs"
+      file:
+        state: "{{ 'directory' if state == 'present' else 'absent' }}"
+        path: "{{ playbook_dir }}/../{{ participant }}-{{ item }}"
+        mode: 'ugo+rw'
+      loop:
+        - sample-app-config
+        - customresources
+
     - name: Render sample templates to {{ participant }}-sample-app-config
       template:
         src: "{{ playbook_dir }}/templates/sample-app-config/{{ item }}.yaml.j2"
