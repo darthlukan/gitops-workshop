@@ -31,50 +31,6 @@
               name: "{{ participant }}"
               namespace: "{{ participant_namespace }}"
 
-    - name: Copy sample-app-ci to {{ participant }}-sample-app-ci
-      copy:
-        src: "{{ playbook_dir }}/../sample-app-ci/"
-        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci"
-        mode: preserve
-      when: state == 'present'
-
-    - name: Remove {{ participant }}-sample-app-ci
-      file:
-        state: "{{ state }}"
-        path: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci"
-        mode: preserve
-      when: state != 'present'
-
-    - name: Replace namespace in {{ participant }}-sample-app-ci
-      replace:
-        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/01-sample-app-ci-namespace.yaml"
-        regexp: 'sample-app-ci'
-        replace: "{{ participant }}-sample-app-ci"
-        mode: 'ugo+rw,o-w'
-
-    - name: Replace branch name in {{ participant }}-sample-app-ci
-      replace:
-        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml"
-        regexp: 'master'
-        replace: "{{ participant }}"
-        mode: 'ugo+rw,o-w'
-
-    - name: Update app-config-path in {{ participant }}-sample-app-ci PipelineRun
-      replace:
-        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/30-pipeline-run.yaml"
-        regexp: 'sample-app-config'
-        replace: "{{ participant }}-sample-app-config"
-        mode: 'ugo+rw,o-w'
-
-    - name: "{{ 'Create' if state == 'present' else 'Remove' }} {{ participant }} dirs"
-      file:
-        state: "{{ 'directory' if state == 'present' else 'absent' }}"
-        path: "{{ playbook_dir }}/../{{ participant }}-{{ item }}"
-        mode: 'ugo+rw'
-      loop:
-        - sample-app-config
-        - customresources
-
     - name: Render sample templates to {{ participant }}-sample-app-config
       template:
         src: "{{ playbook_dir }}/templates/sample-app-config/{{ item }}.yaml.j2"
