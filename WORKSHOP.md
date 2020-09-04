@@ -325,7 +325,8 @@ First, we need to patch our GitHub token and image pull secrets into the Tekton 
 
 ```
 $ cd /path/to/gitops-workshop/ansible
-$ ansible-playbook -i inventory $YOUR_USERNAME-secrets.yaml --ask-vault-pass
+$ ansible-playbook -i inventory $YOUR_USERNAME-secrets.yaml \
+  -e kubeconfig=/path/to/kubeconfig --ask-vault-pass
 ```
 
 Your workshop facilitator will provide you with the Ansible vault password you need to enter.
