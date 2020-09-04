@@ -318,7 +318,7 @@ You can see the updated deployment in your OCP console by navigating to Workload
 
 ## Running the Tekton Pipeline
 
-Now we will demonstrate how a Tekton pipeline can be incorporated in the GitOps process to automate the creation of a new image version in our desired image repository.
+Now we will demonstrate how a Tekton pipeline can be incorporated in the GitOps process to automate the creation of a new image version in our desired image registry.
 
 First, we will deploy our Tekton pipeline. In order to save time, you should run the following playbook:
 
