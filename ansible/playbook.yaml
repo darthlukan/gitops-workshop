@@ -154,6 +154,8 @@
       - 10-version-increment-task.yaml
       - 20-pipeline.yaml
 
+  - import_tasks: secrets.yaml
+
   - name: Create PipelineRun
     # k8s module doesn't currently support generateName: https://github.com/ansible-collections/community.kubernetes/issues/186
     shell:
