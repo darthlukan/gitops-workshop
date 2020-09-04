@@ -81,10 +81,10 @@ $ cd /path/to/gitops-workshop/ansible
 $ ansible-galaxy collection install -r requirements.yaml
 $ ansible-playbook -i inventory playbook.yaml \
   -e kubeconfig=/path/to/kubeconfig \
-  -e scope=cluster||namespace \
+  -e scope=cluster \ # Alternatively, you can use 'namespace' 
   -e internal_registry=$REGISTRY_NAME \ # Omit this unless using a registry such as Artifactory or Nexus to limit image access
-  -e state=present||absent
-  -e argo_release_tag=v1.7.1
+  -e state=present \ # Use 'absent' to undeploy
+  -e argo_release_tag=v1.7.1 \
   -e operator_release_tag=v0.0.12
 ```
 
