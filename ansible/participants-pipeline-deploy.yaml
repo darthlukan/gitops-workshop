@@ -62,7 +62,7 @@
     - name: Populate Tekton task templates
       template:
         src: "{{ playbook_dir }}/templates/sample-app-ci/{{ item }}.j2"
-        dest: "{{ playbook_dir }}/../sample-app-ci/{{ item }}"
+        dest: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/{{ item }}"
         mode: preserve
         force: true
       loop:
