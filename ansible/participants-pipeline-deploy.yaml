@@ -59,15 +59,6 @@
         replace: "{{ participant }}-sample-app-config"
         mode: 'ugo+rw,o-w'
 
-    - name: "{{ 'Create' if state == 'present' else 'Remove' }} {{ participant }} dirs"
-      file:
-        state: "{{ 'directory' if state == 'present' else 'absent' }}"
-        path: "{{ playbook_dir }}/../{{ participant }}-{{ item }}"
-        mode: 'ugo+rw'
-      loop:
-        - sample-app-config
-        - customresources
-
     - name: Populate Tekton task templates
       template:
         src: "{{ playbook_dir }}/templates/sample-app-ci/{{ item }}.j2"
@@ -84,7 +75,7 @@
     - name: Deploy Tekton pipeline
       k8s:
         namespace: "{{ participant }}-sample-app-ci"
-        src: "{{ playbook_dir }}/../sample-app-ci/{{ item }}"
+        src: "{{ playbook_dir }}/../{{ participant }}-sample-app-ci/{{ item }}"
         state: "{{ state }}"
         kubeconfig: "{{ kubeconfig }}"
       loop:
