@@ -426,13 +426,13 @@ $ oc create -f 30-pipeline-run.yaml -n $YOUR_USERNAME-sample-app-ci
 
 After one PipelineRun has been created, you can also choose to trigger a new run from the OCP console by navigating to `Pipelines` -> `Pipeline Runs` -> `Rerun` (on the last `PipelineRun`):
 
-![Manual PipelineRun](/docs/images/11&#32;-&#32;Manual&#32PipelineRun.png "Manual PipelineRun")
+![Manual PipelineRun](/docs/images/11&#32;-&#32;Manual&#32;PipelineRun.png "Manual PipelineRun")
 
 The following actions will then be triggered automatically:
 
 - A new PipelineRun is created in OCP with a generated name following the pattern: `gitops-workshop-pipeline-run-<random-string>`
 
-![New PipelineRun](/docs/images/09&#32;-&#32;New&#32PipelineRun.png "New PipelineRun")
+![New PipelineRun](/docs/images/09&#32;-&#32;New&#32;PipelineRun.png "New PipelineRun")
 
 - The Tekton pipeline checks out our feature branch, builds a new image, and pushes it to our image repository
 
