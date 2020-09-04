@@ -2,6 +2,7 @@
 - name: Setup Participant Pipeline
   hosts: local
   vars:
+    internal_registry: "false"
     git_clone_image_version: "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.14.2"
     git_cli_image_version: "docker.io/alpine/git:v2.26.2"
     buildah_image_version: "quay.io/buildah/stable:v1.14.8"
@@ -14,7 +15,7 @@
         git_cli_image: "{{ git_cli_image_version }}"
         buildah_image: "{{ buildah_image_version }}"
         go_image: "{{ go_image_version }}"
-      when: not internal_registry
+      when: internal_registry == "false"
 
     - name: Set internal registry image locations
       set_fact:
@@ -22,7 +23,7 @@
         git_cli_image: "{{ internal_registry }}/{{ git_cli_image_version }}"
         buildah_image: "{{ internal_registry }}/{{ buildah_image_version }}"
         go_image: "{{ internal_registry }}/{{ go_image_version }}"
-      when: internal_registry
+      when: internal_registry != "false"
 
     - name: Copy sample-app-ci to {{ participant }}-sample-app-ci
       copy:
