@@ -30,6 +30,9 @@ required to use the provided `partcipant-*.yaml` playbooks, they are merely prov
 following along is difficult or if you are pressed for time, run the associated playbook (will be noted in each relevant
 section) to catch up.
 
+You can see a visual overview of the workshop contents below:
+
+![Workshop Overview](/docs/images/Big&#32;Picture.png "Workshop Overview")
 
 ## What is GitOps?
 
