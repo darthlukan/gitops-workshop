@@ -1,0 +1,23 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: conmclo-sample-app
+  namespace: argocd
+spec:
+  project: workshop
+  source:
+    repoURL: https://github.com/darthlukan/gitops-workshop.git
+    targetRevision: conmclo
+    path: conmclo-sample-app-config
+  destination:
+    # Need to get this automagically via detection
+    server: https://kubernetes.default.svc
+    namespace: conmclo-sample-app 
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+...
