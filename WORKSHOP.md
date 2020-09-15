@@ -92,8 +92,6 @@ DEMO SAMPLE APP RECONCILIATION
 
 ## Prepare Your Environment
 
-*IMPORTANT!* _You must first branch from this repository, [https://github.com/darthlukan/gitops-workshop](https://github.com/darthlukan/gitops-workshop), with your GitHub account._
-
 > *NOTE:* Your username MUST be entered as all lowercase characters to create a valid namespace.
 
 ```
