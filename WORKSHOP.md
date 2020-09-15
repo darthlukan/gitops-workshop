@@ -92,6 +92,12 @@ DEMO SAMPLE APP RECONCILIATION
 
 ## Prepare Your Environment
 
+For ease of using the commands below, set an environment variable that contains YOUR_USERNAME (replacing "yourusername" with a username of your choice, in lowercase):
+
+```
+$ export YOUR_USERNAME=yourusername
+```
+
 > *NOTE:* Your username MUST be entered as all lowercase characters to create a valid namespace. You can choose any username, so long as it will be unique to you.
 
 ```
@@ -103,12 +109,6 @@ $ ansible-playbook -i inventory participants-setup.yaml \
 
 > *INSTRUCTION:* Execute the playbook referenced above during the workshop in the interest of time. The steps executed by the
 > playbook are described below.
-
-For ease of using the commands below, set an environment variable that contains YOUR_USERNAME:
-
-```
-$ export YOUR_USERNAME=<the username you chose>
-```
 
 Make sure you are logged into the cluster with a user that has `self-provisioner` set, then execute the following to
 create your namespace and set yourself as a namespace admin:
