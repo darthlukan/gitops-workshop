@@ -90,7 +90,7 @@ is updated with the image it just built.
 DEMO SAMPLE APP RECONCILIATION
 
 
-## Prepare Your Environment
+## 1) Prepare Your Environment
 
 For ease of using the commands below, set an environment variable that contains YOUR_USERNAME (replacing "yourusername" with a username of your choice, in lowercase):
 
@@ -162,7 +162,7 @@ content, copied and personalized the files with which we'll be working, and esta
 "feature" branch.
 
 
-## Initial Deployment
+## 2) Initial Deployment
 
 In this section we will tell ArgoCD to deploy our application. We will be using `CustomResources`, which
 are instances of a `CustomResourceDefinition`, to represent our deployments. In this case we will be using the
@@ -208,7 +208,7 @@ You will see the Argo CD Applications dashboard, and you should see the pipeline
 
 ![ArgoCD Console](/docs/images/03&#32;-&#32;ArgoCD&#32;Console.png "ArgoCD Console")
 
-## Making Changes
+## 3) Making Changes
 
 Now comes the fun part. We are going to make some changes to our files in git, commit and push them, and watch how ArgoCD
 automatically syncs those changes so that we don't have to manually log into the cluster and perform the deployment
@@ -323,7 +323,7 @@ You can see the updated deployment in your OCP console by navigating to Workload
 
 ![Updated Pod](/docs/images/07&#32;-&#32;Updated&#32;Pod.png "Updated Pod")
 
-## Running the Tekton Pipeline
+## 4) Running the Tekton Pipeline
 
 Now we will demonstrate how a Tekton pipeline can be incorporated in the GitOps process to automate the creation of a new image version in our desired image registry.
 
