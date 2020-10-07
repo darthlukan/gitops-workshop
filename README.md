@@ -76,6 +76,8 @@ The following commands will:
 - Install the ArgoCD Operator
 - Instantiate/Deploy the `sample-app`, `sample-app-ci`, and `sample-infra` operands
 
+> *NOTE:* If you do not have a kubeconfig file in your workspace, be sure to perform an oc login to your destination cluster from your workspace.
+
 ```
 $ cd /path/to/gitops-workshop/ansible
 $ ansible-galaxy collection install -r requirements.yaml
