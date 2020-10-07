@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: darthlukan-sample-app
+  namespace: darthlukan-sample-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: darthlukan-sample-app
+  template:
+    metadata:
+      labels:
+        app: darthlukan-sample-app
+    spec:
+      containers:
+        - name: darthlukan-sample-app
+          image: "quay.io/btomlins/greet:v0.0.1"
+          command:
+            - '/usr/bin/greet'
+          args:
+            - 'Hello participant\!'
+...

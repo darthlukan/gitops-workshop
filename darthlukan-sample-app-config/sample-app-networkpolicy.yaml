@@ -1,0 +1,15 @@
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-ci-to-namespace
+  namespace: darthlukan-sample-app
+spec:
+  podSelector: {}
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/instance: darthlukan-sample-app-ci
+        podSelector: {}
+...
