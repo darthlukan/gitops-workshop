@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: gitops-workshop-pipeline-run-
+  annotations:
+    argocd.argoproj.io/hook: Sync
+spec:
+  pipelineRef:
+    name: build-increment-commit
+  workspaces:
+    - name: gitops-workshop-repo-source
+      persistentVolumeClaim:
+        claimName: git-clone-output
+  params:
+    - name: repo-url
+      value: https://github.com/darthlukan/gitops-workshop
+    - name: git-branch
+      value: darthlukan
+    - name: image-name
+      value: quay.io/sscaling/gitops-workshop
+    - name: image-version
+      value: v0.0.2
+    - name: app-path
+      value: sample-app
+    - name: app-config-path
+      value: darthlukan-sample-app-config
+    - name: app-config-filename
+      value: sample-app-deployment.yaml
