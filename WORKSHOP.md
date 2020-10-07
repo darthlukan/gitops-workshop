@@ -94,11 +94,13 @@ DEMO SAMPLE APP RECONCILIATION
 
 For ease of using the commands below, set an environment variable that contains YOUR_USERNAME (replacing "yourusername" with a username of your choice, in lowercase):
 
+> *NOTE:* Your username MUST be entered as all lowercase characters to create a valid namespace. You can choose any username, so long as it will be unique to you.
+
 ```
 $ export YOUR_USERNAME=yourusername
 ```
 
-> *NOTE:* Your username MUST be entered as all lowercase characters to create a valid namespace. You can choose any username, so long as it will be unique to you.
+> *NOTE:* If you do not have a kubeconfig file in your workspace, be sure to perform an oc login to your destination cluster from your workspace.
 
 ```
 $ cd ansible
