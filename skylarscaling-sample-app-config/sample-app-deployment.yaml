@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skylarscaling-sample-app
+  namespace: skylarscaling-sample-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skylarscaling-sample-app
+  template:
+    metadata:
+      labels:
+        app: skylarscaling-sample-app
+    spec:
+      containers:
+        - name: skylarscaling-sample-app
+          image: "quay.io/btomlins/greet:v0.0.1"
+          command:
+            - '/usr/bin/greet'
+          args:
+            - 'Hello participant\!'
+...
