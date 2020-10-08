@@ -1,0 +1,15 @@
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-ci-to-namespace
+  namespace: $YOUR_USERNAME-sample-app
+spec:
+  podSelector: {}
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/instance: $YOUR_USERNAME-sample-app-ci
+        podSelector: {}
+...

@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $YOUR_USERNAME-sample-app
+  namespace: $YOUR_USERNAME-sample-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: $YOUR_USERNAME-sample-app
+  template:
+    metadata:
+      labels:
+        app: $YOUR_USERNAME-sample-app
+    spec:
+      containers:
+        - name: $YOUR_USERNAME-sample-app
+          image: "quay.io/sscaling/gitops-workshop:v0.0.1"
+          command:
+            - '/usr/bin/greet'
+          args:
+            - 'Hello participant\!'
+...
