@@ -313,7 +313,7 @@ Several things just happened "auto-magically" based on our ArgoCD configuration.
     - `oc apply -f sample-app-deployment.yaml`
 4) OCP spun up a new pod containing the updated Application file, and spun down the outdated deployed pod
 
-You can see the updated deployment in your OCP console by navigating to Workloads -> Deployments for your "${YOUR_USERNAME}"-sample-app project:
+You can see the updated deployment in your OCP console by navigating to Workloads -> Deployments for your YOUR_USERNAME-sample-app project:
 
 ![Updated Deployment](/docs/images/06&#32;-&#32;Updated&#32;Deployment.png "Updated Deployment") 
 
