@@ -297,7 +297,7 @@ $ git commit -m "Add ${YOUR_USERNAME} to deployment"
 $ git push -u origin "${YOUR_USERNAME}"
 ```
 
-If you observe the ArgoCD Dashboard, you will see the "${YOUR_USERNAME}"-sample-app Application recognize the change to the repository, sync the updated file, and apply the change to the deployment:
+If you observe the ArgoCD Dashboard, you will see the YOUR_USERNAME-sample-app Application recognize the change to the repository, sync the updated file, and apply the change to the deployment:
 
 ![ArgoCD Sample App Update](/docs/images/05&#32;-&#32;Sample&#32;App&#32;Update.png "ArgoCD Sample App Update")
 
