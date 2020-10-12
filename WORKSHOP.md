@@ -106,57 +106,51 @@ $ export YOUR_USERNAME=yourusername
 $ cd ansible
 $ ansible-playbook -i inventory participants-setup.yaml \
   -e kubeconfig=/path/to/kubeconfig \
-  -e participant=$YOUR_USERNAME
+  -e participant="${YOUR_USERNAME}"
 ```
 
 > *INSTRUCTION:* Execute the playbook referenced above during the workshop in the interest of time. The steps executed by the
 > playbook are described below.
 
 Make sure you are logged into the cluster with a user that has `self-provisioner` set, then execute the following to
-create your namespace and set yourself as a namespace admin:
-
-```
-$ oc new-project $YOUR_USERNAME-gitops
-```
-
-Now we will create the directories to work from and copy over the files we'll be editing:
+create the directories to work from and copy over the files we'll be editing:
 
 ```
 $ cd /path/to/gitops-workshop
-$ mkdir $YOUR_USERNAME-sample-app-config
-$ cp -r sample-app-config $YOUR_USERNAME-sample-app-config
-$ mkdir $YOUR_USERNAME-customresources
-$ cp -r ansible/files/workshop-sample-app-cr.yaml $YOUR_USERNAME-customresources
+$ mkdir "${YOUR_USERNAME}"-sample-app-config
+$ cp -r sample-app-config "${YOUR_USERNAME}"-sample-app-config
+$ mkdir "${YOUR_USERNAME}"-customresources
+$ cp -r ansible/files/workshop-sample-app-cr.yaml "${YOUR_USERNAME}"-customresources
 ```
 
 Next we need to edit the files so that they are personalized and don't cause conflicts with any other workshop
 participants:
 
 ```
-$ cd $YOUR_USERNAME-sample-app-config
-$ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' sample-app-deployment.yaml sample-app-namespace.yaml sample-app-networkpolicy.yaml
-$ cd ../$YOUR_USERNAME-customresources
-$ sed -i 's/sample-app/$YOUR_USERNAME-sample-app/g' workshop-sample-app-cr.yaml
+$ cd "${YOUR_USERNAME}"-sample-app-config
+$ sed -i 's/sample-app/"${YOUR_USERNAME}"-sample-app/g' sample-app-deployment.yaml sample-app-namespace.yaml sample-app-networkpolicy.yaml
+$ cd ../"${YOUR_USERNAME}"-customresources
+$ sed -i 's/sample-app/"${YOUR_USERNAME}"-sample-app/g' workshop-sample-app-cr.yaml
 ```
 
 Finally, we need to copy and modify the file that will allow us to set up our github and pull secrets:
 
 ```
 $ cd /path/to/gitops-workshop/ansible
-$ cp secrets.yaml $YOUR_USERNAME-secrets.yaml
-$ sed -i 's/sample-app-ci/$YOUR_USERNAME-sample-app-ci/g' $YOUR_USERNAME-secrets.yaml
+$ cp secrets.yaml "${YOUR_USERNAME}"-secrets.yaml
+$ sed -i 's/sample-app-ci/"${YOUR_USERNAME}"-sample-app-ci/g' "${YOUR_USERNAME}"-secrets.yaml
 ```
 
 *NOTE:* _The following is NOT completed by the playbook referenced at the top of this section and must be executed manually._
 
-Create a branch that is named `$YOUR_USERNAME` and push your first commit:
+Create a branch that is named `YOUR_USERNAME` and push your first commit:
 
 ```
 $ cd /path/to/gitops-workshop
-$ git checkout -b $YOUR_USERNAME
+$ git checkout -b "${YOUR_USERNAME}"
 $ git add .
 $ git commit -m "environment set up"
-$ git push -u origin $YOUR_USERNAME
+$ git push -u origin "${YOUR_USERNAME}"
 ```
 
 That's it, your environment is now prepared for the rest of the workshop content. To recap, we've branched the workshop
@@ -174,15 +168,15 @@ are instances of a `CustomResourceDefinition`, to represent our deployments. In 
 
 ```
 $ cd /path/to/gitops-workshop/ansible
-$ ansible-playbook -i inventory participants-deploy.yaml -e kubeconfig=/path/to/kubeconfig -e participant=$YOUR_USERNAME
+$ ansible-playbook -i inventory participants-deploy.yaml -e kubeconfig=/path/to/kubeconfig -e participant="${YOUR_USERNAME}"
 ```
 
-First, let's deploy the application and ci pipeline. You will need to change to the `$YOUR_USERNAME-customresources` directory and use
+First, let's deploy the application and ci pipeline. You will need to change to the `YOUR_USERNAME-customresources` directory and use
 either `oc` or `kubectl` to apply the `CustomResources` depending on the cluster type you're using ("Vanilla" Kubernetes
 or OpenShift):
 
 ```
-$ cd $YOUR_USERNAME-customresources
+$ cd "${YOUR_USERNAME}"-customresources
 $ oc apply -f workshop-sample-app-cr.yaml
 ```
 
@@ -221,7 +215,7 @@ operation ourselves.
 
 ```
 $ cd /path/to/gitops-workshop/ansible
-$ ansible-playbook -i inventory participants-make-changes.yaml -e kubeconfig=/path/to/kubeconfig -e participant=$YOUR_USERNAME
+$ ansible-playbook -i inventory participants-make-changes.yaml -e kubeconfig=/path/to/kubeconfig -e participant="${YOUR_USERNAME}"
 ```
 
 First let's make a small change, adding a more personalized greeting to the `sample-app-deployment.yaml` manifest. The
@@ -258,12 +252,12 @@ spec:
 To change this, you can use your text editor or execute the following commands:
 
 ```
-$ cd /path/to/gitops-workshop/$YOUR_USERNAME-sample-app-config
-$ sed -i 's/participant/$YOUR_USERNAME/g' sample-app-deployment.yaml
+$ cd /path/to/gitops-workshop/"${YOUR_USERNAME}"-sample-app-config
+$ sed -i 's/participant/"${YOUR_USERNAME}"/g' sample-app-deployment.yaml
 ```
 
 The result is that the arg on line `25` no longer says `'Hello participant\!'`, but instead reflects whatever
-`$YOUR_USERNAME` is. For example: `'Hello btomlins\!'`. If `$YOUR_USERNAME` is `btomlins`, then you should see the
+`YOUR_USERNAME` is. For example: `'Hello btomlins\!'`. If `YOUR_USERNAME` is `btomlins`, then you should see the
 following completed file:
 
 ```
@@ -297,13 +291,13 @@ In order for ArgoCD to act upon this change, we will need to commit our changes 
 can do so using the following commands:
 
 ```
-$ cd /path/to/gitops-workshop/$YOUR_USERNAME-sample-app-config
+$ cd /path/to/gitops-workshop/"${YOUR_USERNAME}"-sample-app-config
 $ git add sample-app-deployment.yaml
-$ git commit -m "Add $YOUR_USERNAME to deployment"
-$ git push -u origin $YOUR_USERNAME
+$ git commit -m "Add ${YOUR_USERNAME} to deployment"
+$ git push -u origin "${YOUR_USERNAME}"
 ```
 
-If you observe the ArgoCD Dashboard, you will see the $YOUR_USERNAME-sample-app Application recognize the change to the repository, sync the updated file, and apply the change to the deployment:
+If you observe the ArgoCD Dashboard, you will see the YOUR_USERNAME-sample-app Application recognize the change to the repository, sync the updated file, and apply the change to the deployment:
 
 ![ArgoCD Sample App Update](/docs/images/05&#32;-&#32;Sample&#32;App&#32;Update.png "ArgoCD Sample App Update")
 
@@ -319,7 +313,7 @@ Several things just happened "auto-magically" based on our ArgoCD configuration.
     - `oc apply -f sample-app-deployment.yaml`
 4) OCP spun up a new pod containing the updated Application file, and spun down the outdated deployed pod
 
-You can see the updated deployment in your OCP console by navigating to Workloads -> Deployments for your $YOUR_USERNAME-sample-app project:
+You can see the updated deployment in your OCP console by navigating to Workloads -> Deployments for your YOUR_USERNAME-sample-app project:
 
 ![Updated Deployment](/docs/images/06&#32;-&#32;Updated&#32;Deployment.png "Updated Deployment") 
 
@@ -335,7 +329,7 @@ First, we will deploy our Tekton pipeline. In order to save time, you should run
 $ cd /path/to/gitops-workshop/ansible
 $ ansible-playbook -i inventory participants-pipeline-deploy.yaml \
   -e kubeconfig=/path/to/kubeconfig \
-  -e participant=$YOUR_USERNAME \
+  -e participant="${YOUR_USERNAME}" \
   -e state=present \ # Use 'absent' to undeploy
   -e internal_registry=$REGISTRY_NAME # Omit this unless using a registry such as Artifactory or Nexus to limit image access
 ```
@@ -345,16 +339,16 @@ $ ansible-playbook -i inventory participants-pipeline-deploy.yaml \
 Copy the necessary CRD files for the Tekton pipeline and its component tasks:
 
 ```
-$ cp -r sample-app-ci $YOUR_USERNAME-sample-app-ci
+$ cp -r sample-app-ci "${YOUR_USERNAME}"-sample-app-ci
 ```
 
 Replace the namespace, git branch, and config path with the participant's respective values:
 
 ```
-$ cd ../$YOUR_USERNAME-sample-app-ci
-$ sed -i 's/sample-app-ci/$YOUR_USERNAME-sample-app-ci/g' 01-sample-app-ci-namespace.yaml
-$ sed -i 's/master/$YOUR_USERNAME/g' 30-pipeline-run.yaml
-$ sed -i 's/sample-app-config/$YOUR_USERNAME-sample-app-config/g' 30-pipeline-run.yaml
+$ cd ../"${YOUR_USERNAME}"-sample-app-ci
+$ sed -i 's/sample-app-ci/"${YOUR_USERNAME}"-sample-app-ci/g' 01-sample-app-ci-namespace.yaml
+$ sed -i 's/master/"${YOUR_USERNAME}"/g' 30-pipeline-run.yaml
+$ sed -i 's/sample-app-config/"${YOUR_USERNAME}"-sample-app-config/g' 30-pipeline-run.yaml
 ```
 
 Deploy the pipeline and its component tasks from the CRDs:
@@ -377,13 +371,13 @@ $ oc create -f 20-pipeline.yaml
 Finally, we need to patch our GitHub token and image pull secrets into the Tekton pipeline Service Account for our namespace:
 
 ```
-$ ansible-playbook -i inventory $YOUR_USERNAME-secrets.yaml \
+$ ansible-playbook -i inventory "${YOUR_USERNAME}"-secrets.yaml \
   -e kubeconfig=/path/to/kubeconfig --ask-vault-pass
 ```
 
 > *NOTE* - Your workshop facilitator will provide you with the Ansible vault password you need to enter.
 
-Now we can make a change to our pipeline run CRD. For this change, we will update the version number for our image (`image-version` in `$YOUR_USERNAME-sample-app-ci/30-pipeline-run.yaml`):
+Now we can make a change to our pipeline run CRD. For this change, we will update the version number for our image (`image-version` in `YOUR_USERNAME-sample-app-ci/30-pipeline-run.yaml`):
 
 ```
 apiVersion: tekton.dev/v1beta1
@@ -429,8 +423,8 @@ $ git push
 And our final step is to kick off a new `PipelineRun`, which will trigger a new image build and push that image to our desired image registry with the new version number we specified:
 
 ```
-$ cd ../$YOUR_USERNAME-sample-app-ci
-$ oc create -f 30-pipeline-run.yaml -n $YOUR_USERNAME-sample-app-ci
+$ cd ../"${YOUR_USERNAME}"-sample-app-ci
+$ oc create -f 30-pipeline-run.yaml -n "${YOUR_USERNAME}"-sample-app-ci
 ```
 
 After one PipelineRun has been created, you can also choose to trigger a new run from the OCP console by navigating to `Pipelines` -> `Pipeline Runs` -> `Rerun` (on the last `PipelineRun`):
